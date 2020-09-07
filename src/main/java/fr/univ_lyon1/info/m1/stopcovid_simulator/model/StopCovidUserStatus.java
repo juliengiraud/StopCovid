@@ -6,10 +6,10 @@ public enum StopCovidUserStatus {
     INFECTED("Infected"),
     NO_RISK("No Risk");
 
-    private String status;
+    private String name;
 
-    StopCovidUserStatus(String status) {
-        this.status = status;
+    StopCovidUserStatus(String name) {
+        this.name = name;
     }
 
 }

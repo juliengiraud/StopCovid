@@ -1,5 +1,6 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.StopCovidUserStatus;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -26,7 +27,7 @@ public class StopCovidServerView {
         gui.getChildren().add(new Label(text));
         for (StopCovidUserView u : ((JfxView) gui.getParent().getParent()).getUsers()) {
             if (u.getName().equals(text)) {
-                u.setStatus("RISKY");
+                u.setStatus(StopCovidUserStatus.RISKY.name());
             }
         }
     }
