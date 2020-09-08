@@ -8,8 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import static fr.univ_lyon1.info.m1.stopcovid_simulator.model.StopCovidUserStatus.NO_RISK;
-
 public class StopCovidUserView {
     private final VBox gui = new VBox();
     private final VBox contacts = new VBox();

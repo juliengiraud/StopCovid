@@ -29,9 +29,8 @@ public class StopCovidUserModelTest {
         // When
         i = i + 42;
 
-        // Then
-        // TODO: obviously, this test will fail. Fix it.
-        assertThat(i, is(43));
+        // The
+        assertThat(i, is(42));
     }
     
 }
