@@ -1,6 +1,7 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.StopCovidUserStatus;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -8,19 +9,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+import java.util.*;
+
 public class StopCovidUserView {
     private final VBox gui = new VBox();
     private final VBox contacts = new VBox();
-    private final Label status = new Label(StopCovidUserStatus.NO_RISK.getName());
-    private final String name;
+    private final Label status;
+    private final User user;
     private final EventHandler<ActionEvent> declare = new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
-            setStatus(StopCovidUserStatus.INFECTED.getName());
+            user.setStatus(StopCovidUserStatus.INFECTED);
+            setStatus(user.getStatus());
             final StopCovidServerView server =
                     ((JfxView) (gui.getParent().getParent())).getServer();
-            for (final Node l : contacts.getChildren()) {
-                server.declareRisky(((Label) l).getText());
+            for (final User u : user.getMeets()) {
+                server.declareRisky(u);
             }
         }
     };
@@ -29,9 +33,10 @@ public class StopCovidUserView {
         return gui;
     }
 
-    StopCovidUserView(final String name) {
-        this.name = name;
-        final Label l = new Label(name);
+    StopCovidUserView(final User user) {
+        this.user = user;
+        this.status = new Label(user.getStatus().getName());
+        final Label l = new Label(user.getName());
         gui.setStyle("-fx-padding: 10; -fx-border-width: 1;"
                 + " -fx-border-radius: 5; -fx-border-color: #505050;");
 
@@ -42,32 +47,43 @@ public class StopCovidUserView {
 
     @Override
     public String toString() {
-        return name;
-    }
-    /**
-     * Simulate the meeting of two users. Each user will keep the identifier of
-     * the other in memory, and will notify the other if infected.
-     *
-     * @param otherUser The other user being met.
-     */
-    public void meet(final StopCovidUserView otherUser) {
-        for (final Node c : contacts.getChildren()) {
-            if (((Label) c).getText().equals(otherUser.toString())) {
-                return;
-            }
-        }
-        contacts.getChildren().add(new Label(otherUser.toString()));
+        return user.getName();
     }
 
-    public String getName() {
-        return name;
+    public User getUser() {
+        return user;
     }
 
     /**
      * Changes the status in the view.
      * @param status the new status.
      */
-    public void setStatus(final String status) {
-        this.status.setText(status);
+    public void setStatus(final StopCovidUserStatus status) {
+        this.status.setText(status.getName());
+    }
+
+    public void updateContacts() {
+        // We need to override contacts
+        contacts.getChildren().clear();
+
+        // Sort meets by name ASC
+        user.getMeets().sort(new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                return u1.getName().compareTo(u2.getName());
+            }
+        });
+
+        // Get distinct ordered meets
+        LinkedHashSet<User> distinctMeets = new LinkedHashSet<User>(user.getMeets());
+
+        // For each distinct meet, add line into contacts
+        for (final User u : distinctMeets) {
+            int userCount = Collections.frequency(user.getMeets(), u);
+            contacts.getChildren().add(new Label(String.format(
+                    "%s (× %d)",
+                    u.getName(), userCount
+            )));
+        }
     }
 }

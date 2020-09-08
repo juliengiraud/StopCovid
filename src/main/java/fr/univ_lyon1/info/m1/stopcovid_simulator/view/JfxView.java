@@ -3,6 +3,7 @@ package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,8 +20,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class JfxView extends HBox {
-    private List<StopCovidUserView> users = new ArrayList<>();
-    private StopCovidServerView server;
+    private List<StopCovidUserView> usersView = new ArrayList<>();
+    private StopCovidServerView serverView;
     /** View for the whole application.
      * @param stage The JavaFX stage where everything will be displayed.
      * @param width width in px
@@ -29,7 +30,7 @@ public class JfxView extends HBox {
      */
     public JfxView(final Stage stage, final int width,
                    final int height, final int nbUsers) {
-        server = new StopCovidServerView();
+        serverView = new StopCovidServerView();
 
         // Name of window
         stage.setTitle("StopCovid Simulator");
@@ -37,15 +38,17 @@ public class JfxView extends HBox {
         final HBox root = this;
 
         final VBox usersBox = new VBox();
-        final ObservableList<StopCovidUserView> usersList = FXCollections.observableArrayList();
+        final ObservableList<StopCovidUserView> usersViewList = FXCollections.observableArrayList();
+        final List<User> users = new ArrayList<>();
 
         usersBox.getChildren().add(new Label("Users"));
 
         for (int i = 0; i < nbUsers; i++) {
-            final StopCovidUserView u = new StopCovidUserView("User " + i);
-            users.add(u);
+            users.add(new User("User " + i));
+            final StopCovidUserView u = new StopCovidUserView(users.get(i));
+            usersView.add(u);
             usersBox.getChildren().add(u.getGui());
-            usersList.add(u);
+            usersViewList.add(u);
         }
 
         root.getChildren().add(usersBox);
@@ -55,8 +58,8 @@ public class JfxView extends HBox {
 
         final ComboBox<StopCovidUserView> userA = new ComboBox<>();
         final ComboBox<StopCovidUserView> userB = new ComboBox<>();
-        userA.setItems(usersList);
-        userB.setItems(usersList);
+        userA.setItems(usersViewList);
+        userB.setItems(usersViewList);
         final Button meetBtn = new Button("Meet!");
         meetBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -70,13 +73,24 @@ public class JfxView extends HBox {
                     alert.showAndWait();
                     return;
                 }
-                a.meet(b);
+                if (a == b) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setContentText("Please select two different users that will meet");
+                    alert.showAndWait();
+                    return;
+                }
+                a.getUser().meet(b.getUser());
+                a.getUser().updateStatus(); // TODO débuger ici
+                b.getUser().updateStatus();
+                a.updateContacts();
+                b.updateContacts();
             }
         });
 
 
         meetBox.getChildren().addAll(l, new HBox(userA, userB), meetBtn,
-            new Separator(), server.getGui());
+            new Separator(), serverView.getGui());
 
         root.getChildren().addAll(new Separator(), meetBox);
 
@@ -86,10 +100,10 @@ public class JfxView extends HBox {
     }
 
     StopCovidServerView getServer() {
-        return server;
+        return serverView;
     }
 
     List<StopCovidUserView> getUsers() {
-        return users;
+        return usersView;
     }
 }
