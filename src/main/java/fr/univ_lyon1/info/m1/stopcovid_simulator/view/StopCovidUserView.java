@@ -8,17 +8,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import static fr.univ_lyon1.info.m1.stopcovid_simulator.model.StopCovidUserStatus.NO_RISK;
-
 public class StopCovidUserView {
     private final VBox gui = new VBox();
     private final VBox contacts = new VBox();
-    private final Label status = new Label(StopCovidUserStatus.NO_RISK.name());
+    private final Label status = new Label(StopCovidUserStatus.NO_RISK.getName());
     private final String name;
     private final EventHandler<ActionEvent> declare = new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
-            setStatus(StopCovidUserStatus.INFECTED.name());
+            setStatus(StopCovidUserStatus.INFECTED.getName());
             final StopCovidServerView server =
                     ((JfxView) (gui.getParent().getParent())).getServer();
             for (final Node l : contacts.getChildren()) {

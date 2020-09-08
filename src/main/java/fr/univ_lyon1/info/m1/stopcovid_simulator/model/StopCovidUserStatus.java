@@ -8,8 +8,11 @@ public enum StopCovidUserStatus {
 
     private String name;
 
-    StopCovidUserStatus(String name) {
+    StopCovidUserStatus(final String name) {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
 }

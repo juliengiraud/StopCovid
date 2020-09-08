@@ -27,7 +27,7 @@ public class StopCovidServerView {
         gui.getChildren().add(new Label(text));
         for (StopCovidUserView u : ((JfxView) gui.getParent().getParent()).getUsers()) {
             if (u.getName().equals(text)) {
-                u.setStatus(StopCovidUserStatus.RISKY.name());
+                u.setStatus(StopCovidUserStatus.RISKY.getName());
             }
         }
     }
