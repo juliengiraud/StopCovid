@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-public class StopCovidUserView {
+public class UserView {
     private final VBox gui = new VBox();
     private final VBox contacts = new VBox();
     private final Label status = new Label(StopCovidUserStatus.NO_RISK.name());
@@ -17,7 +17,7 @@ public class StopCovidUserView {
         @Override
         public void handle(final ActionEvent event) {
             setStatus(StopCovidUserStatus.INFECTED.name());
-            final StopCovidServerView server =
+            final ServerView server =
                     ((JfxView) (gui.getParent().getParent())).getServer();
             for (final Node l : contacts.getChildren()) {
                 server.declareRisky(((Label) l).getText());
@@ -29,7 +29,7 @@ public class StopCovidUserView {
         return gui;
     }
 
-    StopCovidUserView(final String name) {
+    UserView(final String name) {
         this.name = name;
         final Label l = new Label(name);
         gui.setStyle("-fx-padding: 10; -fx-border-width: 1;"
@@ -50,7 +50,7 @@ public class StopCovidUserView {
      *
      * @param otherUser The other user being met.
      */
-    public void meet(final StopCovidUserView otherUser) {
+    public void meet(final UserView otherUser) {
         for (final Node c : contacts.getChildren()) {
             if (((Label) c).getText().equals(otherUser.toString())) {
                 return;

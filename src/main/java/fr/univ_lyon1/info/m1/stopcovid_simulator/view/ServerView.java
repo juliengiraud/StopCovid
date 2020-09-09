@@ -5,7 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-public class StopCovidServerView {
+public class ServerView {
     private final VBox gui = new VBox();
     /** Get the GUI object corresponding to the server. */
     public Node getGui() {
@@ -25,7 +25,7 @@ public class StopCovidServerView {
         }
         gui.getChildren().add(new Label("Risky users:"));
         gui.getChildren().add(new Label(text));
-        for (StopCovidUserView u : ((JfxView) gui.getParent().getParent()).getUsers()) {
+        for (UserView u : ((JfxView) gui.getParent().getParent()).getUsers()) {
             if (u.getName().equals(text)) {
                 u.setStatus(StopCovidUserStatus.RISKY.name());
             }
