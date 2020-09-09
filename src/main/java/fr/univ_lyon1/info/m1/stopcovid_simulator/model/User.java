@@ -1,47 +1,63 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+
+import static java.util.Collections.frequency;
 
 public class User {
 
-    private String name;
+    private final String name;
     private StopCovidUserStatus status;
     private final List<User> meets;
 
-    public User(String name) {
+    /**
+     * User constructor. Has a "name", a "status" (NO_RISK / RISKY / INFECTED) and a "meets" list.
+     * @param name User's name
+     */
+    public User(final String name) {
         this.name = name;
         this.status = StopCovidUserStatus.NO_RISK;
         this.meets = new ArrayList<>();
     }
 
+    /**
+     * Getter.
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * Getter.
+     * @return status
+     */
     public StopCovidUserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(StopCovidUserStatus status) {
+    /**
+     * Setter.
+     * @param status User's status
+     */
+    public void setStatus(final StopCovidUserStatus status) {
         this.status = status;
         if (status.equals(StopCovidUserStatus.INFECTED)) {
-            meets.forEach( (User u) -> {
-                updateStatus();
-            });
+            LinkedHashSet<User> distinctMeets = new LinkedHashSet<User>(meets);
+            for (User u : distinctMeets) {
+                u.updateStatus();
+            }
         }
     }
 
+    /**
+     * Getter.
+     * @return meets
+     */
     public List<User> getMeets() {
         return meets;
-    }
-
-    public void addMeet(User m) {
-        meets.add(m);
     }
 
     /**
@@ -50,26 +66,34 @@ public class User {
      *
      * @param otherUser The other user being met.
      */
-    public void meet(User otherUser) {
+    public void meet(final User otherUser) {
         meets.add(otherUser);
         otherUser.getMeets().add(this);
         System.out.println(String.format("%s a rencontré %s", name, otherUser.getName()));
     }
 
+    /**
+     *
+     */
     public void updateStatus() {
         if (status.equals(StopCovidUserStatus.INFECTED)) {
             return;
         }
-        int count = 0;
-        for (User u : meets) {
-            if (u.getStatus().equals(StopCovidUserStatus.INFECTED)) {
-                count++;
+        LinkedHashSet<User> distinctMeets = new LinkedHashSet<User>(meets);
+        for (User u : distinctMeets) {
+            if (!u.getStatus().equals(StopCovidUserStatus.INFECTED)
+                    || frequency(meets, u) < 2) {
+                continue;
             }
-        }
-        if (count >= 2) {
-            status = StopCovidUserStatus.RISKY;
+
+            setStatus(StopCovidUserStatus.RISKY);
             System.out.println(String.format("%s passe en status %s", name, status.getName()));
+            return;
         }
     }
 
+    @Override
+    public String toString() {
+        return name + " : " + status;
+    }
 }

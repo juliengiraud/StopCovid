@@ -1,10 +1,11 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
-import fr.univ_lyon1.info.m1.stopcovid_simulator.model.StopCovidUserStatus;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
 
 public class StopCovidServerView {
     private final VBox gui = new VBox();
@@ -14,22 +15,15 @@ public class StopCovidServerView {
     }
 
     /**
-    * Declare this user as risky, i.e. having been in contact with an infected person.
+    * Update the server view. Display risky users.
     *
-    * @param user  Name of the user to declare risky.
+    * @param riskyUsers List of risky users.
     */
-    public void declareRisky(final User user) {
-        for (Node c : gui.getChildren()) {
-            if (((Label) c).getText().equals(user.getName())) {
-                return;
-            }
-        }
+    public void updateView(final ArrayList<User> riskyUsers) {
+        gui.getChildren().clear();
         gui.getChildren().add(new Label("Risky users:"));
-        gui.getChildren().add(new Label(user.getName()));
-        for (StopCovidUserView u : ((JfxView) gui.getParent().getParent()).getUsers()) {
-            if (u.getUser().getName().equals(user.getName())) {
-                u.setStatus(StopCovidUserStatus.RISKY);
-            }
+        for (User u : riskyUsers) {
+            gui.getChildren().add(new Label(u.getName()));
         }
     }
 

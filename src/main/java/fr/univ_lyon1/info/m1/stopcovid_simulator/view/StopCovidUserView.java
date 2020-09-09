@@ -8,7 +8,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Comparator;
+import java.util.Collections;
 
 public class StopCovidUserView {
     private final VBox gui = new VBox();
@@ -19,12 +22,21 @@ public class StopCovidUserView {
         @Override
         public void handle(final ActionEvent event) {
             user.setStatus(StopCovidUserStatus.INFECTED);
-            setStatus(user.getStatus());
-            final StopCovidServerView server =
-                    ((JfxView) (gui.getParent().getParent())).getServer();
-            for (final User u : user.getMeets()) {
-                server.declareRisky(u);
+            updateStatus();
+            ArrayList<User> riskyUsers = new ArrayList<>();
+            LinkedHashSet<User> distinctMeets = new LinkedHashSet<User>(user.getMeets());
+            for (final User u : distinctMeets) {
+                if (u.getStatus().equals(StopCovidUserStatus.RISKY)) {
+                    riskyUsers.add(u);
+
+                }
             }
+            JfxView view = (JfxView) gui.getParent().getParent();
+            view.getServer().updateView(riskyUsers);
+            for (StopCovidUserView userView : view.getUsersView()) {
+                userView.updateStatus();
+            }
+            updateContacts();
         }
     };
 
@@ -55,12 +67,14 @@ public class StopCovidUserView {
 
     /**
      * Changes the status in the view.
-     * @param status the new status.
      */
-    public void setStatus(final StopCovidUserStatus status) {
-        this.status.setText(status.getName());
+    public void updateStatus() {
+        this.status.setText(user.getStatus().getName());
     }
 
+    /**
+     * Update user's contact list.
+     */
     public void updateContacts() {
         // We need to override contacts
         contacts.getChildren().clear();
@@ -68,7 +82,7 @@ public class StopCovidUserView {
         // Sort meets by name ASC
         user.getMeets().sort(new Comparator<User>() {
             @Override
-            public int compare(User u1, User u2) {
+            public int compare(final User u1, final User u2) {
                 return u1.getName().compareTo(u2.getName());
             }
         });

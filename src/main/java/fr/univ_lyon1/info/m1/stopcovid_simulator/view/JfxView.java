@@ -103,7 +103,7 @@ public class JfxView extends HBox {
         return serverView;
     }
 
-    List<StopCovidUserView> getUsers() {
+    List<StopCovidUserView> getUsersView() {
         return usersView;
     }
 }
