@@ -1,6 +1,6 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.model;
 
-public enum StopCovidUserStatus {
+public enum UserStatus {
 
     RISKY("Risky"),
     INFECTED("Infected"),
@@ -8,8 +8,11 @@ public enum StopCovidUserStatus {
 
     private String name;
 
-    StopCovidUserStatus(final String name) {
+    UserStatus(final String name) {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
 }

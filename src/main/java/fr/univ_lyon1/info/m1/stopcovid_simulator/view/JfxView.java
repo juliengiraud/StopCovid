@@ -22,8 +22,8 @@ import javafx.stage.Stage;
 
 public class JfxView extends HBox {
 
-    private List<UserView> users = new ArrayList<>();
-    private ServerView server;
+    private List<UserView> usersView = new ArrayList<>();
+    private ServerView serverView;
     private Controller controller;
 
     /** View for the whole application.
@@ -34,11 +34,12 @@ public class JfxView extends HBox {
      */
     public JfxView(final Stage stage, final int width, final int height,
                    final Controller controller) {
-        this.server = new ServerView();
+
+        this.serverView = new ServerView();
         this.controller = controller;
 
         // Name of window
-        stage.setTitle("StopCovid Simulator");
+        stage.setTitle(" Simulator");
 
         final HBox root = this;
 
@@ -48,10 +49,10 @@ public class JfxView extends HBox {
         usersBox.getChildren().add(new Label("Users"));
 
         for (User u : controller.getUsers()) {
-            final UserView uv = new UserView(u.getName());
+            final UserView uv = new UserView(u);
             // C'est marrant parce que les UV ça pique les yeux,
-            // un peu comme le code de ce projet
-            users.add(uv);
+            // un peu comme le code de ce projet au départ
+            usersView.add(uv);
             usersBox.getChildren().add(uv.getGui());
             usersList.add(uv);
         }
@@ -78,13 +79,24 @@ public class JfxView extends HBox {
                     alert.showAndWait();
                     return;
                 }
-                a.meet(b);
+                if (a == b) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setContentText("Please select two different users that will meet");
+                    alert.showAndWait();
+                    return;
+                }
+                a.getUser().meet(b.getUser());
+                a.getUser().updateStatus();
+                b.getUser().updateStatus();
+                a.updateContacts();
+                b.updateContacts();
             }
         });
 
 
         meetBox.getChildren().addAll(l, new HBox(userA, userB), meetBtn,
-            new Separator(), server.getGui());
+            new Separator(), serverView.getGui());
 
         root.getChildren().addAll(new Separator(), meetBox);
 
@@ -93,11 +105,11 @@ public class JfxView extends HBox {
         stage.show();
     }
 
-    ServerView getServer() {
-        return server;
+    ServerView getServerView() {
+        return serverView;
     }
 
-    List<UserView> getUsers() {
-        return users;
+    List<UserView> getUsersView() {
+        return usersView;
     }
 }

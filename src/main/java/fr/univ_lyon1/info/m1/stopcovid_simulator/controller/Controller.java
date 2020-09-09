@@ -8,6 +8,10 @@ public class Controller {
 
     private List<User> users = new ArrayList<>();
 
+    /**
+     * Controller for the whole application.
+     * @param nbUsers
+     */
     public Controller(final int nbUsers) {
         for (int i = 0; i < nbUsers; i++) {
             users.add(new User("User " + i));
