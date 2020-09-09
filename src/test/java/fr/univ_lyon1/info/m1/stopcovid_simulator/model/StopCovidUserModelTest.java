@@ -1,8 +1,5 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.model;
 
-import static org.hamcrest.Matchers.hasEntry;
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -29,9 +26,8 @@ public class StopCovidUserModelTest {
         // When
         i = i + 42;
 
-        // Then
-        // TODO: obviously, this test will fail. Fix it.
-        assertThat(i, is(43));
+        // The
+        assertThat(i, is(42));
     }
-    
+
 }

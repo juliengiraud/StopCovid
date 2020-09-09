@@ -30,9 +30,7 @@ public class App extends Application {
      *
      * @param args Command-line arguments
      */
-    // TODO: checkstyle will (rightfully) complain about this brace. Make sure it
-    // does, and then fix it. Remove this TODO comment when done.
-    public static void main(final String[] args){
+    public static void main(final String[] args) {
         Application.launch(args);
     }
 }
