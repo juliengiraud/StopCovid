@@ -8,6 +8,8 @@ import static java.util.Collections.frequency;
 
 public class User {
 
+    private static int lastId = 0;
+    private final int id;
     private final String name;
     private UserStatus status;
     private final List<User> meets;
@@ -17,9 +19,18 @@ public class User {
      * @param name User's name
      */
     public User(final String name) {
+        this.id = lastId++;
         this.name = name;
         this.status = UserStatus.NO_RISK;
         this.meets = new ArrayList<>();
+    }
+
+    /**
+     * Getter.
+     * @return id
+     */
+    public int getId() {
+        return id;
     }
 
     /**
@@ -69,17 +80,19 @@ public class User {
     public void meet(final User otherUser) {
         meets.add(otherUser);
         otherUser.getMeets().add(this);
+        updateStatus();
+        otherUser.updateStatus();
         System.out.println(String.format("%s a rencontré %s", name, otherUser.getName()));
     }
 
     /**
-     *
+     * Update user status and notify contacts if infected.
      */
     public void updateStatus() {
         if (status.equals(UserStatus.INFECTED)) {
             return;
         }
-        LinkedHashSet<User> distinctMeets = new LinkedHashSet<User>(meets);
+        LinkedHashSet<User> distinctMeets = new LinkedHashSet<>(meets);
         for (User u : distinctMeets) {
             if (!u.getStatus().equals(UserStatus.INFECTED)
                     || frequency(meets, u) < 2) {

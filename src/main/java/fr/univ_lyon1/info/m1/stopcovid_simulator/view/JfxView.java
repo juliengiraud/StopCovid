@@ -7,8 +7,6 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -22,9 +20,15 @@ import javafx.stage.Stage;
 
 public class JfxView extends HBox {
 
-    private List<UserView> usersView = new ArrayList<>();
-    private ServerView serverView;
-    private Controller controller;
+    private List<UserView> usersView = new ArrayList<>(); //
+    private final ObservableList<UserView> usersList;
+    private final ComboBox<UserView> leftUserComboBox;
+    private final ComboBox<UserView> rightUserComboBox;
+    private final ServerView serverView;
+    private final Controller controller;
+    private final Stage stage;
+    private final int width;
+    private final int height;
 
     /** View for the whole application.
      * @param stage The JavaFX stage where everything will be displayed.
@@ -35,16 +39,24 @@ public class JfxView extends HBox {
     public JfxView(final Stage stage, final int width, final int height,
                    final Controller controller) {
 
+        this.stage = stage;
+        this.width = width;
+        this.height = height;
         this.serverView = new ServerView();
         this.controller = controller;
+        this.leftUserComboBox = new ComboBox<>();
+        this.rightUserComboBox = new ComboBox<>();
+        this.usersList = FXCollections.observableArrayList();
 
+        initWindow();
+    }
+
+    private void initWindow() {
         // Name of window
         stage.setTitle(" Simulator");
 
         final HBox root = this;
-
         final VBox usersBox = new VBox();
-        final ObservableList<UserView> usersList = FXCollections.observableArrayList();
 
         usersBox.getChildren().add(new Label("Users"));
 
@@ -57,59 +69,52 @@ public class JfxView extends HBox {
             usersList.add(uv);
         }
 
-        root.getChildren().add(usersBox);
+        this.getChildren().add(usersBox);
 
-        final VBox meetBox = new VBox();
-        final Label l = new Label("Proximity simulator");
-
-        final ComboBox<UserView> userA = new ComboBox<>();
-        final ComboBox<UserView> userB = new ComboBox<>();
-        userA.setItems(usersList);
-        userB.setItems(usersList);
-        final Button meetBtn = new Button("Meet!");
-        meetBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(final ActionEvent event) {
-                final UserView a = userA.getValue();
-                final UserView b = userB.getValue();
-                if (a == null || b == null) {
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setContentText("Please select two users that will meet");
-                    alert.showAndWait();
-                    return;
-                }
-                if (a == b) {
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setContentText("Please select two different users that will meet");
-                    alert.showAndWait();
-                    return;
-                }
-                a.getUser().meet(b.getUser());
-                a.getUser().updateStatus();
-                b.getUser().updateStatus();
-                a.updateContacts();
-                b.updateContacts();
-            }
-        });
-
-
-        meetBox.getChildren().addAll(l, new HBox(userA, userB), meetBtn,
-            new Separator(), serverView.getGui());
-
-        root.getChildren().addAll(new Separator(), meetBox);
+        initMeetBox();
 
         final Scene scene = new Scene(root, width, height);
         stage.setScene(scene);
         stage.show();
     }
 
-    ServerView getServerView() {
+    private void initMeetBox() {
+
+        final VBox meetBox = new VBox();
+        final Label l = new Label("Proximity simulator");
+
+        leftUserComboBox.setItems(usersList);
+        rightUserComboBox.setItems(usersList);
+        final Button meetBtn = new Button("Meet!");
+        meetBtn.setOnAction(event -> {
+            onMeetBtnClick();
+        });
+
+        meetBox.getChildren().addAll(l, new HBox(leftUserComboBox, rightUserComboBox), meetBtn,
+                new Separator(), serverView.getGui());
+
+        this.getChildren().addAll(new Separator(), meetBox);
+    }
+
+    private void onMeetBtnClick() {
+        final UserView a = leftUserComboBox.getValue();
+        final UserView b = rightUserComboBox.getValue();
+        if (a == null || b == null || a.getUser() == b.getUser()) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Please select two different users that will meet");
+            alert.showAndWait();
+            return;
+        }
+        controller.addMeet(a.getUser(), b.getUser());
+        // TODO créer et appeler la fonction d'update UI générale
+    }
+
+    public ServerView getServerView() {
         return serverView;
     }
 
-    List<UserView> getUsersView() {
+    public List<UserView> getUsersView() {
         return usersView;
     }
 }

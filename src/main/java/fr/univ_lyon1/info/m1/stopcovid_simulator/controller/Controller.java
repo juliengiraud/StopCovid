@@ -22,4 +22,27 @@ public class Controller {
         return users;
     }
 
+    /**
+     * Return user with matching id, null if not found.
+     * @param id
+     * @return user
+     */
+    public User getUserById(final int id) {
+        for (User u : users) {
+            if (u.getId() == id) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Create new meet between two users.
+     * @param a
+     * @param b
+     */
+    public void addMeet(final User a, final User b) {
+        a.meet(b);
+    }
+
 }
