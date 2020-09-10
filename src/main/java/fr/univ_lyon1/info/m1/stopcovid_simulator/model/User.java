@@ -25,48 +25,33 @@ public class User {
         this.meets = new ArrayList<>();
     }
 
-    /**
-     * Getter.
-     * @return id
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     * Getter.
-     * @return name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Getter.
-     * @return status
-     */
     public UserStatus getStatus() {
         return status;
     }
 
     /**
-     * Setter.
+     * Set the status. If the user become infected, it will check if the users he met get risky.
+     *
      * @param status User's status
      */
     public void setStatus(final UserStatus status) {
         this.status = status;
         if (status.equals(UserStatus.INFECTED)) {
-            LinkedHashSet<User> distinctMeets = new LinkedHashSet<User>(meets);
+            LinkedHashSet<User> distinctMeets = new LinkedHashSet<>(meets);
             for (User u : distinctMeets) {
-                u.updateStatus();
+                u.checkRisky(this);
             }
         }
     }
 
-    /**
-     * Getter.
-     * @return meets
-     */
     public List<User> getMeets() {
         return meets;
     }
@@ -80,29 +65,25 @@ public class User {
     public void meet(final User otherUser) {
         meets.add(otherUser);
         otherUser.getMeets().add(this);
-        updateStatus();
-        otherUser.updateStatus();
-        System.out.println(String.format("%s a rencontré %s", name, otherUser.getName()));
+        checkRisky(otherUser);
+        otherUser.checkRisky(this);
+        System.out.printf("%s a rencontré %s%n", name, otherUser.getName());
     }
 
     /**
-     * Update user status and notify contacts if infected.
+     * Check if a user is infected and met at least two times the current user.
+     * If so, the current user get risky.
+     *
+     * @param otherUser The other user who potentially get the current user risky
      */
-    public void updateStatus() {
-        if (status.equals(UserStatus.INFECTED)) {
+    public void checkRisky(final User otherUser) {
+        if (status != UserStatus.NO_RISK || otherUser.getStatus() != UserStatus.INFECTED
+                || frequency(meets, otherUser) < 2) {
             return;
         }
-        LinkedHashSet<User> distinctMeets = new LinkedHashSet<>(meets);
-        for (User u : distinctMeets) {
-            if (!u.getStatus().equals(UserStatus.INFECTED)
-                    || frequency(meets, u) < 2) {
-                continue;
-            }
 
-            setStatus(UserStatus.RISKY);
-            System.out.println(String.format("%s passe en status %s", name, status.getName()));
-            return;
-        }
+        setStatus(UserStatus.RISKY);
+        System.out.printf("%s passe en status %s%n", name, status.getName());
     }
 
     @Override

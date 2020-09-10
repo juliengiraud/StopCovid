@@ -1,7 +1,7 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.controller.Controller;
-import fr.univ_lyon1.info.m1.stopcovid_simulator.view.JfxView;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.view.MainView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -30,7 +30,7 @@ public class App extends Application {
     @Override
     public void start(final Stage stage) {
         Controller c = new Controller(NB_USERS);
-        new JfxView(stage, WIDTH, HEIGHT, c);
+        new MainView(stage, WIDTH, HEIGHT, c);
     }
 
 }

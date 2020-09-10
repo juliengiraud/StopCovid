@@ -6,7 +6,7 @@ public enum UserStatus {
     INFECTED("Infected"),
     NO_RISK("No Risk");
 
-    private String name;
+    private final String name;
 
     UserStatus(final String name) {
         this.name = name;

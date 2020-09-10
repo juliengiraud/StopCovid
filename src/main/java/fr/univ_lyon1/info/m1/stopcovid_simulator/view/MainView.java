@@ -18,10 +18,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class JfxView extends HBox {
+public class MainView extends HBox {
 
-    private List<UserView> usersView = new ArrayList<>(); //
-    private final ObservableList<UserView> usersList;
+    private final List<UserView> usersView = new ArrayList<>(); //
+    private final ArrayList<UserView> usersList;
     private final ComboBox<UserView> leftUserComboBox;
     private final ComboBox<UserView> rightUserComboBox;
     private final ServerView serverView;
@@ -36,8 +36,8 @@ public class JfxView extends HBox {
      * @param height height in px
      * @param controller number of users to manage
      */
-    public JfxView(final Stage stage, final int width, final int height,
-                   final Controller controller) {
+    public MainView(final Stage stage, final int width, final int height,
+                    final Controller controller) {
 
         this.stage = stage;
         this.width = width;
@@ -46,7 +46,7 @@ public class JfxView extends HBox {
         this.controller = controller;
         this.leftUserComboBox = new ComboBox<>();
         this.rightUserComboBox = new ComboBox<>();
-        this.usersList = FXCollections.observableArrayList();
+        this.usersList = new ArrayList<>();
 
         initWindow();
     }
@@ -61,11 +61,11 @@ public class JfxView extends HBox {
         usersBox.getChildren().add(new Label("Users"));
 
         for (User u : controller.getUsers()) {
-            final UserView uv = new UserView(u);
+            final UserView uv = new UserView(this, u);
             // C'est marrant parce que les UV ça pique les yeux,
             // un peu comme le code de ce projet au départ
             usersView.add(uv);
-            usersBox.getChildren().add(uv.getGui());
+            usersBox.getChildren().add(uv.getGui()); // TODO : Put that in user view
             usersList.add(uv);
         }
 
@@ -76,19 +76,22 @@ public class JfxView extends HBox {
         final Scene scene = new Scene(root, width, height);
         stage.setScene(scene);
         stage.show();
+
+        updateView();
     }
 
+    // TODO : Put that in ServerView
     private void initMeetBox() {
 
         final VBox meetBox = new VBox();
         final Label l = new Label("Proximity simulator");
 
-        leftUserComboBox.setItems(usersList);
-        rightUserComboBox.setItems(usersList);
+        ObservableList<UserView> usersListObs = FXCollections.observableArrayList(usersList);
+
+        leftUserComboBox.setItems(FXCollections.observableArrayList(usersListObs));
+        rightUserComboBox.setItems(FXCollections.observableArrayList(usersListObs));
         final Button meetBtn = new Button("Meet!");
-        meetBtn.setOnAction(event -> {
-            onMeetBtnClick();
-        });
+        meetBtn.setOnAction(event -> onMeetBtnClick());
 
         meetBox.getChildren().addAll(l, new HBox(leftUserComboBox, rightUserComboBox), meetBtn,
                 new Separator(), serverView.getGui());
@@ -96,6 +99,7 @@ public class JfxView extends HBox {
         this.getChildren().addAll(new Separator(), meetBox);
     }
 
+    // TODO : Put that in UserView
     private void onMeetBtnClick() {
         final UserView a = leftUserComboBox.getValue();
         final UserView b = rightUserComboBox.getValue();
@@ -107,14 +111,16 @@ public class JfxView extends HBox {
             return;
         }
         controller.addMeet(a.getUser(), b.getUser());
-        // TODO créer et appeler la fonction d'update UI générale
+        updateView();
     }
 
-    public ServerView getServerView() {
-        return serverView;
-    }
-
-    public List<UserView> getUsersView() {
-        return usersView;
+    /**
+     * Update all views (server and users).
+     */
+    public void updateView() {
+        serverView.updateView(usersList);
+        for (UserView uv : usersView) {
+            uv.updateView();
+        }
     }
 }

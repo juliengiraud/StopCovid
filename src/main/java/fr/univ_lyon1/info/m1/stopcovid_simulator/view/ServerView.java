@@ -1,6 +1,7 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -16,13 +17,16 @@ public class ServerView {
     /**
     * Update the server view. Display risky users.
     *
-    * @param riskyUsers List of risky users.
+    * @param users List of users to get risky users.
     */
-    public void updateView(final ArrayList<User> riskyUsers) {
+    public void updateView(final ArrayList<UserView> users) {
         gui.getChildren().clear();
         gui.getChildren().add(new Label("Risky users:"));
-        for (User u : riskyUsers) {
-            gui.getChildren().add(new Label(u.getName()));
+        for (UserView uv : users) {
+            User user = uv.getUser();
+            if (user.getStatus() == UserStatus.RISKY) {
+                gui.getChildren().add(new Label(user.getName()));
+            }
         }
     }
 
