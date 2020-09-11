@@ -29,8 +29,13 @@ public class App extends Application {
      */
     @Override
     public void start(final Stage stage) {
-        Controller c = new Controller(NB_USERS);
-        new MainView(stage, WIDTH, HEIGHT, c);
-    }
+        Controller controller = new Controller(NB_USERS);
 
+        MainView mainView = new MainView(stage, WIDTH, HEIGHT, controller);
+        controller.addView(mainView);
+
+        /*Stage stage2 = new Stage(stage.getStyle());
+        MainView mainView2 = new MainView(stage2, 500, 500, controller);
+        controller.addView(mainView2);*/
+    }
 }

@@ -27,7 +27,7 @@ public class UserView {
         final Button declareBtn = new Button("Declare Infected");
         declareBtn.setOnAction(event -> {
             user.setStatus(UserStatus.INFECTED);
-            mainView.updateView();
+            mainView.updateViews();
         });
         gui.getChildren().addAll(l, new Label("Contacts:"), contacts, declareBtn, status);
     }

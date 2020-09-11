@@ -18,7 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class MainView extends HBox {
+public class MainView extends HBox implements StopCovidView {
 
     private final List<UserView> usersView = new ArrayList<>(); //
     private final ArrayList<UserView> usersList;
@@ -52,6 +52,7 @@ public class MainView extends HBox {
     }
 
     private void initWindow() {
+        System.out.println("a");
         // Name of window
         stage.setTitle(" Simulator");
 
@@ -76,8 +77,6 @@ public class MainView extends HBox {
         final Scene scene = new Scene(root, width, height);
         stage.setScene(scene);
         stage.show();
-
-        updateView();
     }
 
     // TODO : Put that in ServerView
@@ -111,16 +110,27 @@ public class MainView extends HBox {
             return;
         }
         controller.addMeet(a.getUser(), b.getUser());
-        updateView();
+        updateViews();
     }
 
     /**
      * Update all views (server and users).
      */
+    @Override
     public void updateView() {
         serverView.updateView(usersList);
         for (UserView uv : usersView) {
             uv.updateView();
         }
+    }
+
+    /**
+     * Update all views :
+     * Server, users from this mainView and the other StopCovidViews by the Controller.
+     * This function is meant to be used within the view classes.
+     */
+    public void updateViews() {
+        updateView();
+        controller.updateViews(this);
     }
 }
