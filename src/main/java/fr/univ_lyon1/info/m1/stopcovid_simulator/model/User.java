@@ -67,7 +67,7 @@ public class User {
         otherUser.getMeets().add(this);
         checkRisky(otherUser);
         otherUser.checkRisky(this);
-        System.out.printf("%s a rencontré %s%n", name, otherUser.getName());
+        // System.out.printf("%s a rencontré %s%n", name, otherUser.getName());
     }
 
     /**
@@ -83,11 +83,11 @@ public class User {
         }
 
         setStatus(UserStatus.RISKY);
-        System.out.printf("%s passe en status %s%n", name, status.getName());
+        // System.out.printf("%s passe en status %s%n", name, status.getName());
     }
 
     @Override
     public String toString() {
-        return name + " : " + status;
+        return name;
     }
 }

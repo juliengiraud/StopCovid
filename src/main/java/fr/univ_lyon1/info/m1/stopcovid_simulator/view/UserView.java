@@ -2,7 +2,6 @@ package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -12,38 +11,36 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 
 public class UserView {
+
     private final VBox gui = new VBox();
     private final VBox contacts = new VBox();
     private final Label status;
     private final User user;
+    private final MainView mainView;
 
-    UserView(final MainView mainView, final User user) {
+    UserView(final MainView mainView, final User user, final VBox usersBox) {
+        this.mainView = mainView;
         this.user = user;
         this.status = new Label(user.getStatus().getName());
-        final Label l = new Label(user.getName());
-        gui.setStyle("-fx-padding: 10; -fx-border-width: 1;"
-                + " -fx-border-radius: 5; -fx-border-color: #505050;");
+        initView();
+        usersBox.getChildren().add(gui);
+    }
 
+    private void initView() {
+        final Label l = new Label(user.getName());
         final Button declareBtn = new Button("Declare Infected");
         declareBtn.setOnAction(event -> {
             user.setStatus(UserStatus.INFECTED);
             mainView.updateViews();
         });
         gui.getChildren().addAll(l, new Label("Contacts:"), contacts, declareBtn, status);
-    }
-
-
-    Node getGui() {
-        return gui;
+        gui.setStyle("-fx-padding: 10; -fx-border-width: 1;"
+                + " -fx-border-radius: 5; -fx-border-color: #505050;");
     }
 
     @Override
     public String toString() {
         return user.getName();
-    }
-
-    public User getUser() {
-        return user;
     }
 
     /**
