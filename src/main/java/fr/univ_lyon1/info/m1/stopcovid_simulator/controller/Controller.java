@@ -1,6 +1,7 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.controller;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.service.UserService;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.view.StopCovidView;
 
 import java.util.ArrayList;
@@ -8,8 +9,8 @@ import java.util.List;
 
 public class Controller {
 
-    private final List<User> users = new ArrayList<>();
     private final List<StopCovidView> views;
+    private final UserService userService;
 
     /**
      * Controller for the whole application.
@@ -17,36 +18,25 @@ public class Controller {
      */
     public Controller(final int nbUsers) {
         views = new ArrayList<>();
-        for (int i = 0; i < nbUsers; i++) {
-            users.add(new User("User " + (i + 1)));
-        }
-    }
-
-    public List<User> getUsers() {
-        return users;
+        userService = new UserService(nbUsers);
     }
 
     /**
-     * Return user with matching id, null if not found.
-     * @param id User's id
-     * @return user
+     * Get all users from UserService.
+     *
+     * @return users
      */
-    public User getUserById(final int id) {
-        for (User u : users) {
-            if (u.getId() == id) {
-                return u;
-            }
-        }
-        return null;
+    public List<User> getUsers() {
+        return userService.getUsers();
     }
 
     /**
-     * Create new meet between two users.
+     * Create new meet between two users from UserService.
      * @param a One user
      * @param b Another user
      */
     public void addMeet(final User a, final User b) {
-        a.meet(b);
+        userService.addMeet(a, b);
     }
 
     /**
