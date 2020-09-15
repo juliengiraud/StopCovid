@@ -1,7 +1,7 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
+import fr.univ_lyon1.info.m1.stopcovid_simulator.controller.Controller;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
-import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -10,16 +10,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 
-public class UserView {
+public class UserView { // TODO implement observer
 
     private final VBox gui = new VBox();
     private final VBox contacts = new VBox();
     private final Label status;
     private final User user;
-    private final MainView mainView;
+    private final Controller controller;
 
-    UserView(final MainView mainView, final User user, final VBox usersBox) {
-        this.mainView = mainView;
+    UserView(final Controller controller, final User user, final VBox usersBox) {
+        this.controller = controller;
         this.user = user;
         this.status = new Label(user.getStatus().getName());
         initView();
@@ -30,8 +30,7 @@ public class UserView {
         final Label l = new Label(user.getName());
         final Button declareBtn = new Button("Declare Infected");
         declareBtn.setOnAction(event -> {
-            user.setStatus(UserStatus.INFECTED);
-            mainView.updateViews();
+            controller.declareInfected(user);
         });
         gui.getChildren().addAll(l, new Label("Contacts:"), contacts, declareBtn, status);
         gui.setStyle("-fx-padding: 10; -fx-border-width: 1;"

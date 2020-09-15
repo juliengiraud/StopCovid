@@ -1,10 +1,12 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.controller;
 
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.RiskStrategy;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.service.UserService;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.view.StopCovidView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Controller {
@@ -50,13 +52,35 @@ public class Controller {
 
     /**
      * Update all the views by calling the updateView method from StopCovidView.
-     * @param original The view that called this function dont need to be called
      */
-    public void updateViews(final StopCovidView original) {
+    public void updateViews() {
         for (StopCovidView view : views) {
-            if (view != original) {
-                view.updateView();
-            }
+            view.updateView();
         }
     }
+
+    public List<RiskStrategy> getStrategies() {
+        return Arrays.asList(RiskStrategy.values());
+    }
+
+    /**
+     * Set the strategy we use to check if a user is risky.
+     *
+     * @param strategy
+     */
+    public void setRiskStrategy(final RiskStrategy strategy) {
+        User.setRiskStrategy(strategy);
+        userService.updateRiskyUsers();
+    }
+
+    /**
+     * Ask the user service to declare a user as risky.
+     *
+     * @param u
+     */
+    public void declareInfected(final User u) {
+        userService.declareInfected(u);
+        updateViews();
+    }
+
 }

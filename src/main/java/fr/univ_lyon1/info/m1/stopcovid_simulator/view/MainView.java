@@ -40,7 +40,7 @@ public class MainView extends HBox implements StopCovidView {
 
         this.getChildren().addAll(initAndGetUsersBox(), // Add UsersView to window
                 new Separator(),
-                serverView.getMeetBox()); // Add ServerView to window
+                serverView); // Add ServerView to window
 
         stage.setScene(new Scene(this, width, height));
         stage.show();
@@ -52,7 +52,7 @@ public class MainView extends HBox implements StopCovidView {
         usersBox.getChildren().add(new Label("Users"));
 
         for (User u : controller.getUsers()) {
-            usersView.add(new UserView(this, u, usersBox)); // Create usersView access
+            usersView.add(new UserView(controller, u, usersBox)); // Create usersView access
         }
         return usersBox;
     }
@@ -61,7 +61,7 @@ public class MainView extends HBox implements StopCovidView {
      * Update all views (server and users).
      */
     @Override
-    public void updateView() {
+    public void updateView() { // TODO virer ce truc
         serverView.updateView();
         for (UserView uv : usersView) {
             // It's funny because UV light burns eyes,
@@ -75,8 +75,8 @@ public class MainView extends HBox implements StopCovidView {
      * Server, users from this mainView and the other StopCovidViews by the Controller.
      * This function is meant to be used within the view classes.
      */
-    public void updateViews() {
+    public void updateViews() { // TODO virer ce truc
         updateView();
-        controller.updateViews(this);
+        controller.updateViews();
     }
 }

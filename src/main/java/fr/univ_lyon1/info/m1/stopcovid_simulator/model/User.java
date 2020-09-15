@@ -6,16 +6,17 @@ import java.util.List;
 
 import static java.util.Collections.frequency;
 
-public class User {
+public class User { // TODO implement observable
 
     private static int lastId = 0;
+    private static RiskStrategy riskStrategy = RiskStrategy.SEND_ALL_CONTACTS;
     private final int id;
     private final String name;
     private UserStatus status;
     private final List<User> meets;
 
     /**
-     * User constructor. Has a "name", a "status" (NO_RISK / RISKY / INFECTED) and a "meets" list.
+     * User constructor. Has a "name", a "status" (NO_RISK / RISKY / INFECTED) and a "meet" list.
      * @param name User's name
      */
     public User(final String name) {
@@ -56,6 +57,10 @@ public class User {
         return meets;
     }
 
+    public static void setRiskStrategy(final RiskStrategy riskStrategy) {
+        User.riskStrategy = riskStrategy;
+    }
+
     /**
      * Simulate the meeting of two users. Each user will keep the identifier of
      * the other in memory, and will notify the other if infected.
@@ -67,7 +72,6 @@ public class User {
         otherUser.getMeets().add(this);
         checkRisky(otherUser);
         otherUser.checkRisky(this);
-        // System.out.printf("%s a rencontré %s%n", name, otherUser.getName());
     }
 
     /**
@@ -78,12 +82,15 @@ public class User {
      */
     public void checkRisky(final User otherUser) {
         if (status != UserStatus.NO_RISK || otherUser.getStatus() != UserStatus.INFECTED
-                || frequency(meets, otherUser) < 2) {
+                || frequency(meets, otherUser) < riskStrategy.getLimitValue()) {
             return;
         }
 
         setStatus(UserStatus.RISKY);
-        // System.out.printf("%s passe en status %s%n", name, status.getName());
+        // TODO modifier le comportement de cette fonction, normalement quand il y a une
+        //  rencontre il faut demander à chacun des deux utilisateur concernés de regarder s'il
+        //  devrait passer en risky mais en aucun cas cette fonction ne devrait prendre le
+        //  "otherUser" en entrée
     }
 
     @Override
