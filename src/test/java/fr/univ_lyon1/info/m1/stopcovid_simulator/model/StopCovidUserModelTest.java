@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class UserModelTest {
 
     @Test
-    void differentIdCheck() {
+    void differentIdTest() {
         // Given
         User a = new User("");
 
@@ -19,7 +19,7 @@ class UserModelTest {
     }
 
     @Test
-    void infectedCheck() {
+    void infectedTest() {
         // Given
         User a = new User("");
 
@@ -30,7 +30,7 @@ class UserModelTest {
     }
 
     @Test
-    void getRiskyCheck() {
+    void getRiskyTest() {
         // Given
         User a = new User("");
         a.setStatus(UserStatus.INFECTED);
@@ -44,7 +44,7 @@ class UserModelTest {
     }
 
     @Test
-    void getRiskyAfterCheck() {
+    void getRiskyAfterTest() {
         // Given
         User a = new User("");
         User b = new User("");
@@ -58,7 +58,7 @@ class UserModelTest {
     }
 
     @Test
-    void infectedNotRiskyCheck() {
+    void infectedNotRiskyTest() {
         // Given
         User a = new User("");
         a.setStatus(UserStatus.INFECTED);
@@ -72,7 +72,7 @@ class UserModelTest {
     }
 
     @Test
-    void contactCountCheck() {
+    void contactCountTest() {
         // Given
         User a = new User("");
         User b = new User("");
@@ -86,7 +86,7 @@ class UserModelTest {
     }
 
     @Test
-    void meetReflexive() {
+    void meetReflexiveTest() {
         // Given
         User a = new User("");
         User b = new User("");

@@ -71,6 +71,16 @@ public class User {
     }
 
     /**
+     * Remove a contact from the meets list.
+     * @param contact User to remove
+     */
+    public void removeContact(final User contact) {
+        while(meets.contains(contact)) {
+            meets.remove(contact);
+        }
+    }
+
+    /**
      * Check if a user is infected and met at least two times the current user.
      * If so, the current user get risky.
      *
