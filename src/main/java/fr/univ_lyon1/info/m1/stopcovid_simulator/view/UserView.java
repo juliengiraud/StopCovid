@@ -1,6 +1,5 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
-import fr.univ_lyon1.info.m1.stopcovid_simulator.controller.Controller;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
 import javafx.geometry.Pos;

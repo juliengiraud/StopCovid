@@ -75,7 +75,7 @@ public class User {
      * @param contact User to remove
      */
     public void removeContact(final User contact) {
-        while(meets.contains(contact)) {
+        while (meets.contains(contact)) {
             meets.remove(contact);
         }
     }
