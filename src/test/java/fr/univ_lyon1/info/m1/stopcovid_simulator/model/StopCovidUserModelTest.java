@@ -6,29 +6,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.Test;
 
 class UserModelTest {
-    @Test
-    void dummyTestInt() {
-        // Given
-        Integer i = 0;
-
-        // When
-        i++;
-
-        // Then
-        assertThat(i, is(1));
-    }
-
-    @Test
-    void dummyTestIntFailure() {
-        // Given
-        Integer i = 0;
-
-        // When
-        i = i + 42;
-
-        // The
-        assertThat(i, is(42));
-    }
 
     @Test
     void differentIdCheck() {
@@ -41,12 +18,84 @@ class UserModelTest {
         assertThat(b.getId(), is(a.getId() + 1));
     }
 
-    // TODO test :
-    //  Vérifier qu'un utilisateur déclaré INFECTED passe bien à INFECTED
-    //  Vérifier qu'un utilisateur NO_RISKY passe en RISKY après 2 contacts déjà INFECTED
-    //  Vérifier qu'un utilisateur NO_RISKY passe en RISKY après 2 contacts qui passent en INFECTED
-    //  Vérifier qu'un utilisateur INFECTED ne peut pas passer en RISKY
-    //  Vérifier que le nombre de contacts INFECTED se met bien à jour
-    //  Vérifier que a.meet(b) est équivalent à b.meet(a)
+    @Test
+    void infectedCheck() {
+        // Given
+        User a = new User("");
 
+        // When
+        a.setStatus(UserStatus.INFECTED);
+
+        assertThat(a.getStatus(), is(UserStatus.INFECTED));
+    }
+
+    @Test
+    void getRiskyCheck() {
+        // Given
+        User a = new User("");
+        a.setStatus(UserStatus.INFECTED);
+        User b = new User("");
+
+        // When
+        a.meet(b);
+        a.meet(b);
+
+        assertThat(b.getStatus(), is(UserStatus.RISKY));
+    }
+
+    @Test
+    void getRiskyAfterCheck() {
+        // Given
+        User a = new User("");
+        User b = new User("");
+
+        // When
+        a.meet(b);
+        a.meet(b);
+        a.setStatus(UserStatus.INFECTED);
+
+        assertThat(b.getStatus(), is(UserStatus.RISKY));
+    }
+
+    @Test
+    void infectedNotRiskyCheck() {
+        // Given
+        User a = new User("");
+        a.setStatus(UserStatus.INFECTED);
+        User b = new User("");
+
+        // When
+        a.meet(b);
+        a.meet(b);
+
+        assertThat(a.getStatus(), is(UserStatus.INFECTED));
+    }
+
+    @Test
+    void contactCountCheck() {
+        // Given
+        User a = new User("");
+        User b = new User("");
+
+        // When
+        a.meet(b);
+        a.meet(b);
+        a.meet(b);
+
+        assertThat(a.getMeets().size(), is(3));
+    }
+
+    @Test
+    void meetReflexive() {
+        // Given
+        User a = new User("");
+        User b = new User("");
+        User c = new User("");
+
+        // When
+        a.meet(b);
+        c.meet(a);
+
+        assertThat(b.getMeets(), is(c.getMeets()));
+    }
 }
