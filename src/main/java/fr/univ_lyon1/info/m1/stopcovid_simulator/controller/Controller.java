@@ -83,4 +83,14 @@ public class Controller {
         updateViews();
     }
 
+    /**
+     * User A removes user B from contact list.
+     * @param a
+     * @param b
+     */
+    public void removeContact(final User a, final User b) {
+        a.removeContact(b);
+        updateViews();
+    }
+
 }

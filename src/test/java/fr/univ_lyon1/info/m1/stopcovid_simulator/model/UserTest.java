@@ -24,7 +24,7 @@ class UserTest {
         User a = new User("");
 
         // When
-        a.setStatus(UserStatus.INFECTED);
+        a.declareInfected();
 
         assertThat(a.getStatus(), is(UserStatus.INFECTED));
     }
@@ -33,7 +33,7 @@ class UserTest {
     void getRiskyTest() {
         // Given
         User a = new User("");
-        a.setStatus(UserStatus.INFECTED);
+        a.declareInfected();
         User b = new User("");
 
         // When
@@ -52,7 +52,7 @@ class UserTest {
         // When
         a.meet(b);
         a.meet(b);
-        a.setStatus(UserStatus.INFECTED);
+        a.declareInfected();
 
         assertThat(b.getStatus(), is(UserStatus.RISKY));
     }
@@ -61,7 +61,7 @@ class UserTest {
     void infectedNotRiskyTest() {
         // Given
         User a = new User("");
-        a.setStatus(UserStatus.INFECTED);
+        a.declareInfected();
         User b = new User("");
 
         // When

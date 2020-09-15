@@ -45,7 +45,7 @@ public class ServerView extends VBox { // TODO implement observer
                 controller.getStrategies());
 
         cb.setItems(list);
-        cb.getSelectionModel().select(1);
+        cb.getSelectionModel().select(0);
         cb.setOnAction(event -> onStrategyChange(cb.getValue()));
         startegyBox.setPadding(new Insets(STRATEGY_BOX_PADDING_Y, 0, STRATEGY_BOX_PADDING_Y, 0));
 

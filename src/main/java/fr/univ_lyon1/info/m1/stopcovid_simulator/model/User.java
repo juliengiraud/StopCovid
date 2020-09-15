@@ -1,7 +1,6 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.model;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import static java.util.Collections.frequency;
@@ -9,7 +8,7 @@ import static java.util.Collections.frequency;
 public class User { // TODO implement observable
 
     private static int lastId = 0;
-    private static RiskStrategy riskStrategy = RiskStrategy.SEND_ALL_CONTACTS;
+    private static RiskStrategy riskStrategy = RiskStrategy.values()[0];
     private final int id;
     private final String name;
     private UserStatus status;
@@ -38,21 +37,6 @@ public class User { // TODO implement observable
         return status;
     }
 
-    /**
-     * Set the status. If the user become infected, it will check if the users he met get risky.
-     *
-     * @param status User's status
-     */
-    public void setStatus(final UserStatus status) {
-        this.status = status;
-        if (status.equals(UserStatus.INFECTED)) {
-            LinkedHashSet<User> distinctMeets = new LinkedHashSet<>(meets);
-            for (User u : distinctMeets) {
-                u.checkRisky(this);
-            }
-        }
-    }
-
     public List<User> getMeets() {
         return meets;
     }
@@ -70,8 +54,8 @@ public class User { // TODO implement observable
     public void meet(final User otherUser) {
         meets.add(otherUser);
         otherUser.getMeets().add(this);
-        checkRisky(otherUser);
-        otherUser.checkRisky(this);
+        checkRisky();
+        otherUser.checkRisky();
     }
 
     /**
@@ -82,25 +66,53 @@ public class User { // TODO implement observable
         while (meets.contains(contact)) {
             meets.remove(contact);
         }
+        checkRisky();
+        contact.checkRisky();
     }
 
     /**
-     * Check if a user is infected and met at least two times the current user.
+     * Check if a user should be risky, according to the risky strategy.
      * If so, the current user get risky.
-     *
-     * @param otherUser The other user who potentially get the current user risky
      */
-    public void checkRisky(final User otherUser) {
-        if (status != UserStatus.NO_RISK || otherUser.getStatus() != UserStatus.INFECTED
-                || frequency(meets, otherUser) < riskStrategy.getLimitValue()) {
+    public void checkRisky() {
+        if (status == UserStatus.INFECTED) {
             return;
         }
+        status = UserStatus.NO_RISK;
+        switch (riskStrategy) {
+            case SEND_ALL_CONTACTS:
+                for (User u : meets) {
+                    if (u.status.equals(UserStatus.INFECTED)) {
+                        status = UserStatus.RISKY;
+                    }
+                }
+                break;
+            case SEND_FROM_TWO_CONTACTS:
+                for (User u : meets) {
+                    if (u.status.equals(UserStatus.INFECTED) && frequency(meets, u) >= 2) {
+                        status = UserStatus.RISKY;
+                    }
+                }
+                break;
+            case SEND_TEN_MOST_FREQUENT_CONTACTS:
+                // TODO
+                // List tenMostFrequentContacts = new ArrayList<User>();
+                // Map<User>, Integer> frequencyMap = ;
+                // Stream.of(meets).collect(Collectors.groupingBy(Function.identity(),
+                // Collectors.counting()));
+                // LinkedHashSet<User> distinctMeets = new LinkedHashSet<>(meets);
+                break;
+            default:
+                break;
+        }
+    }
 
-        setStatus(UserStatus.RISKY);
-        // TODO modifier le comportement de cette fonction, normalement quand il y a une
-        //  rencontre il faut demander à chacun des deux utilisateur concernés de regarder s'il
-        //  devrait passer en risky mais en aucun cas cette fonction ne devrait prendre le
-        //  "otherUser" en entrée
+    /**
+     * Set user status to infected and notify contacts.
+     */
+    public void declareInfected() {
+        status = UserStatus.INFECTED;
+        meets.forEach(u -> u.checkRisky());
     }
 
     @Override

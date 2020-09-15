@@ -72,7 +72,7 @@ public class UserView { // TODO implement observer
             final HBox box = new HBox();
             final Button xButton = new Button("x");
             xButton.setOnMouseClicked(event -> {
-                user.removeContact(u);
+                controller.removeContact(user, u);
                 updateContacts();
             });
 

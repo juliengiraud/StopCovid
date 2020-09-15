@@ -1,7 +1,6 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.service;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
-import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class UserService {
      * @param u
      */
     public void declareInfected(final User u) {
-        u.setStatus(UserStatus.INFECTED);
+        u.declareInfected();
     }
 
     /**
