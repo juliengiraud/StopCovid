@@ -31,6 +31,6 @@ public class ControllerTest {
         controller.addMeet(a, b);
 
         // Then
-        assertThat(a.getMeets().get(0), is(b));
+        assertThat(a.getMeets().get(b), is(1));
     }
 }

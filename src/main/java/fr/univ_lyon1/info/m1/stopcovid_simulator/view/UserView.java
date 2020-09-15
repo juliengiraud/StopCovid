@@ -8,10 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-
 public class UserView { // TODO implement observer
 
     private final VBox gui = new VBox();
@@ -58,16 +54,9 @@ public class UserView { // TODO implement observer
         // We need to override contacts
         contacts.getChildren().clear();
 
-        // Sort meets by name ASC
-        user.getMeets().sort(Comparator.comparing(User::getName));
-
-        // Get distinct ordered meets
-        LinkedHashSet<User> distinctMeets = new LinkedHashSet<>(user.getMeets());
-
         // For each distinct meet, add line into contacts
-        for (final User u : distinctMeets) {
-            int userCount = Collections.frequency(user.getMeets(), u);
-            Label contactLabel = new Label(String.format("%s (× %d)", u.getName(), userCount));
+        user.getMeets().forEach((u, i) -> {
+            Label contactLabel = new Label(String.format("%s (× %d)", u.getName(), i));
 
             final HBox box = new HBox();
             final Button xButton = new Button("x");
@@ -84,7 +73,7 @@ public class UserView { // TODO implement observer
             box.getChildren().add(contactLabel);
             box.getChildren().add(xButton);
             contacts.getChildren().add(box);
-        }
+        });
     }
 
     /**

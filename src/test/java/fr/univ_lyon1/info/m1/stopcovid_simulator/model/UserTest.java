@@ -82,7 +82,7 @@ class UserTest {
         a.meet(b);
         a.meet(b);
 
-        assertThat(a.getMeets().size(), is(3));
+        assertThat(a.getMeets().size(), is(1));
     }
 
     @Test
