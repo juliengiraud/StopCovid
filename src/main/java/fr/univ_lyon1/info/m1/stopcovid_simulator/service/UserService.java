@@ -14,9 +14,12 @@ public class UserService {
      * @param nbUsers
      */
     public UserService(final int nbUsers) {
-        for (int i = 0; i < nbUsers; i++) {
-            users.add(new User("User " + (i + 1)));
-        }
+        users.add(new User("a"));
+        users.add(new User("z"));
+        users.add(new User("e"));
+        users.add(new User("r"));
+        users.add(new User("t"));
+        users.sort(User::compareTo);
     }
 
     /**

@@ -1,16 +1,16 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.model;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
-public class User { // TODO implement observable
+public class User implements Comparable<User> { // TODO implement observable
 
     private static int lastId = 0;
     private static RiskStrategy riskStrategy = RiskStrategy.values()[0];
     private final int id;
     private final String name;
     private UserStatus status;
-    private final Map<User, Integer> meets = new HashMap<>();
+    private final Map<User, Integer> meets = new TreeMap<>();
 
     /**
      * User constructor. Has a "name", a "status" (NO_RISK / RISKY / INFECTED) and a "meet" list.
@@ -122,5 +122,10 @@ public class User { // TODO implement observable
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(final User user) {
+        return name.compareTo(user.name);
     }
 }

@@ -54,7 +54,7 @@ public class UserView { // TODO implement observer
         // We need to override contacts
         contacts.getChildren().clear();
 
-        // For each distinct meet, add line into contacts
+        // For each contact
         user.getMeets().forEach((u, i) -> {
             Label contactLabel = new Label(String.format("%s (× %d)", u.getName(), i));
 
