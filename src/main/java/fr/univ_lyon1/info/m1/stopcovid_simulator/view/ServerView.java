@@ -1,9 +1,9 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.controller.Controller;
-import fr.univ_lyon1.info.m1.stopcovid_simulator.model.RiskStrategy;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.RiskStrategy;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

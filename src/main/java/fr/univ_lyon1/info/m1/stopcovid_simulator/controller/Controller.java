@@ -1,7 +1,11 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.controller;
 
-import fr.univ_lyon1.info.m1.stopcovid_simulator.model.RiskStrategy;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.SendAllContacts;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.SendFromTwoContacts;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.RiskStrategy;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.SendTenMostFrequentContact;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.view.StopCovidView;
 
 import java.util.ArrayList;
@@ -50,7 +54,8 @@ public class Controller {
     }
 
     public List<RiskStrategy> getStrategies() {
-        return Arrays.asList(RiskStrategy.values());
+        return Arrays.asList(new SendAllContacts(), new SendFromTwoContacts(),
+                new SendTenMostFrequentContact());
     }
 
     /**
@@ -67,6 +72,14 @@ public class Controller {
      * Check for each user if he's risky.
      */
     public void updateRiskyUsers() {
+        // Reset risky users
+        users.forEach(u -> {
+            if (u.getStatus().equals(UserStatus.RISKY)) {
+                u.setStatus(UserStatus.NO_RISK);
+            }
+        });
+
+        // Update risky users
         users.forEach(u -> u.checkRisky());
     }
 

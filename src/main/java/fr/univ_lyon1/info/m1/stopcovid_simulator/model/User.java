@@ -1,12 +1,15 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.model;
 
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.SendAllContacts;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.RiskStrategy;
+
 import java.util.Map;
 import java.util.TreeMap;
 
 public class User implements Comparable<User> { // TODO implement observable
 
     private static int lastId = 0;
-    private static RiskStrategy riskStrategy = RiskStrategy.values()[0];
+    private static RiskStrategy riskStrategy = new SendAllContacts();
     private final int id;
     private final String name;
     private UserStatus status;
@@ -32,6 +35,10 @@ public class User implements Comparable<User> { // TODO implement observable
 
     public UserStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(final UserStatus status) {
+        this.status = status;
     }
 
     public Map<User, Integer> getMeets() {
@@ -70,45 +77,14 @@ public class User implements Comparable<User> { // TODO implement observable
      */
     public void removeContact(final User contact) {
         meets.remove(contact);
-        checkRisky();
-        contact.checkRisky();
     }
 
     /**
-     * Check if a user should be risky, according to the risky strategy.
-     * If so, the current user get risky.
+     * Check if a contact of the current user should be risky, according to the risky strategy.
+     * If so, he gets risky.
      */
     public void checkRisky() {
-        if (status == UserStatus.INFECTED) {
-            return;
-        }
-        status = UserStatus.NO_RISK;
-        switch (riskStrategy) {
-            case SEND_ALL_CONTACTS:
-                for (User u : meets.keySet()) {
-                    if (u.status.equals(UserStatus.INFECTED)) {
-                        status = UserStatus.RISKY;
-                    }
-                }
-                break;
-            case SEND_FROM_TWO_CONTACTS:
-                for (User u : meets.keySet()) {
-                    if (u.status.equals(UserStatus.INFECTED) && meets.get(u) >= 2) {
-                        status = UserStatus.RISKY;
-                    }
-                }
-                break;
-            case SEND_TEN_MOST_FREQUENT_CONTACTS:
-                // TODO
-                // List tenMostFrequentContacts = new ArrayList<User>();
-                // Map<User>, Integer> frequencyMap = ;
-                // Stream.of(meets).collect(Collectors.groupingBy(Function.identity(),
-                // Collectors.counting()));
-                // LinkedHashSet<User> distinctMeets = new LinkedHashSet<>(meets);
-                break;
-            default:
-                break;
-        }
+        riskStrategy.getRiskyContacts(this).forEach(u -> u.status = UserStatus.RISKY);
     }
 
     /**
@@ -116,7 +92,7 @@ public class User implements Comparable<User> { // TODO implement observable
      */
     public void declareInfected() {
         status = UserStatus.INFECTED;
-        meets.keySet().forEach(u -> u.checkRisky());
+        checkRisky();
     }
 
     @Override
