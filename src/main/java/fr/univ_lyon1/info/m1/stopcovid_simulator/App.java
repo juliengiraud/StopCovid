@@ -39,10 +39,8 @@ public class App extends Application {
                 .build();
 
         MainView mainView = new MainView(stage, WIDTH, HEIGHT, controller);
-        controller.addView(mainView);
 
         // Stage stage2 = new Stage(stage.getStyle());
         // MainView mainView2 = new MainView(stage2, WIDTH, HEIGHT, controller);
-        // controller.addView(mainView2);
     }
 }

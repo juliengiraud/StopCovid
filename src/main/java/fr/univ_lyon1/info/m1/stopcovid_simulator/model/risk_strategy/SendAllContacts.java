@@ -13,8 +13,14 @@ public class SendAllContacts implements RiskStrategy {
         if (!cu.getStatus().equals(UserStatus.INFECTED)) {
             return new ArrayList<>();
         }
-        return new ArrayList<>(cu.getMeets().keySet());
-        // TODO vérifier que l'algo marche
+        List<User> contacts = new ArrayList<>();
+        cu.getMeets().forEach((u, i) -> {
+            if (!u.getStatus().equals(UserStatus.INFECTED)) {
+                contacts.add(u);
+            }
+        });
+        return contacts;
+        // TODO vérifier que l'algo marche (@test)
     }
 
     @Override

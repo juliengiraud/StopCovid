@@ -13,7 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class MainView extends HBox implements StopCovidView {
+public class MainView extends HBox {
 
     private final List<UserView> usersView = new ArrayList<>();
     private final ServerView serverView;
@@ -31,7 +31,7 @@ public class MainView extends HBox implements StopCovidView {
                     final Controller controller) {
         this.stage = stage;
         this.controller = controller;
-        this.serverView = new ServerView(controller, this);
+        this.serverView = new ServerView(controller);
 
         initWindow(width, height);
     }
@@ -62,26 +62,4 @@ public class MainView extends HBox implements StopCovidView {
         return panel;
     }
 
-    /**
-     * Update all views (server and users).
-     */
-    @Override
-    public void updateView() { // TODO virer ce truc
-        serverView.updateView();
-        for (UserView uv : usersView) {
-            // It's funny because UV light burns eyes,
-            // exactly like the code of this project at the beginning
-            uv.updateView();
-        }
-    }
-
-    /**
-     * Update all views :
-     * Server, users from this mainView and the other StopCovidViews by the Controller.
-     * This function is meant to be used within the view classes.
-     */
-    public void updateViews() { // TODO virer ce truc
-        updateView();
-        controller.updateViews();
-    }
 }

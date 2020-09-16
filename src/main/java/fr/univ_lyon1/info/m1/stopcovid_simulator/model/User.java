@@ -3,10 +3,12 @@ package fr.univ_lyon1.info.m1.stopcovid_simulator.model;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.SendAllContacts;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.RiskStrategy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class User implements Comparable<User> { // TODO implement observable
+public class User implements Comparable<User> {
 
     private static int lastId = 0;
     private static RiskStrategy riskStrategy = new SendAllContacts();
@@ -14,6 +16,8 @@ public class User implements Comparable<User> { // TODO implement observable
     private final String name;
     private UserStatus status;
     private final Map<User, Integer> meets = new TreeMap<>();
+    private final List<Observer> observers = new ArrayList<>();
+
 
     /**
      * User constructor. Has a "name", a "status" (NO_RISK / RISKY / INFECTED) and a "meet" list.
@@ -37,8 +41,13 @@ public class User implements Comparable<User> { // TODO implement observable
         return status;
     }
 
+    /**
+     * Setter for user status.
+     * @param status
+     */
     public void setStatus(final UserStatus status) {
         this.status = status;
+        notifyObservers();
     }
 
     public Map<User, Integer> getMeets() {
@@ -57,9 +66,13 @@ public class User implements Comparable<User> { // TODO implement observable
      */
     public void meet(final User otherUser) {
         addMeet(this, otherUser);
+        notifyObservers();
+
         addMeet(otherUser, this);
-        checkRisky();
-        otherUser.checkRisky();
+        otherUser.notifyObservers();
+
+        updateRiskyStatus();
+        otherUser.updateRiskyStatus();
     }
 
     private void addMeet(final User a, final User b) {
@@ -77,14 +90,18 @@ public class User implements Comparable<User> { // TODO implement observable
      */
     public void removeContact(final User contact) {
         meets.remove(contact);
+        notifyObservers();
     }
 
     /**
      * Check if a contact of the current user should be risky, according to the risky strategy.
      * If so, he gets risky.
      */
-    public void checkRisky() {
-        riskStrategy.getRiskyContacts(this).forEach(u -> u.status = UserStatus.RISKY);
+    public void updateRiskyStatus() {
+        riskStrategy.getRiskyContacts(this).forEach(u -> {
+            u.status = UserStatus.RISKY;
+            u.notifyObservers();
+        });
     }
 
     /**
@@ -92,7 +109,8 @@ public class User implements Comparable<User> { // TODO implement observable
      */
     public void declareInfected() {
         status = UserStatus.INFECTED;
-        checkRisky();
+        notifyObservers();
+        updateRiskyStatus();
     }
 
     @Override
@@ -104,4 +122,21 @@ public class User implements Comparable<User> { // TODO implement observable
     public int compareTo(final User user) {
         return name.compareTo(user.name);
     }
+
+    /**
+     * Add new observer to the current user.
+     *
+     * @param observer
+     */
+    public void attach(final Observer observer) {
+        observers.add(observer);
+    }
+
+    /**
+     * Update all observers of the current user.
+     */
+    public void notifyObservers() {
+        observers.forEach(o -> o.update());
+    }
+
 }

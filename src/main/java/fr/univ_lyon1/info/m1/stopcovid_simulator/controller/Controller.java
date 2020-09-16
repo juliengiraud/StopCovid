@@ -6,7 +6,6 @@ import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.SendAllCont
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.SendFromTwoContacts;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.RiskStrategy;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.SendTenMostFrequentContact;
-import fr.univ_lyon1.info.m1.stopcovid_simulator.view.StopCovidView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +13,6 @@ import java.util.List;
 
 public class Controller {
 
-    private final List<StopCovidView> views = new ArrayList<>();
     private final List<User> users = new ArrayList<>();
 
     /**
@@ -35,24 +33,6 @@ public class Controller {
         a.meet(b);
     }
 
-    /**
-     * Add a view to the viewList so that the controller can update all the views.
-     * @param view The new view
-     */
-    public void addView(final StopCovidView view) {
-        views.add(view);
-        view.updateView();
-    }
-
-    /**
-     * Update all the views by calling the updateView method from StopCovidView.
-     */
-    public void updateViews() {
-        for (StopCovidView view : views) {
-            view.updateView();
-        }
-    }
-
     public List<RiskStrategy> getStrategies() {
         return Arrays.asList(new SendAllContacts(), new SendFromTwoContacts(),
                 new SendTenMostFrequentContact());
@@ -68,10 +48,7 @@ public class Controller {
         updateRiskyUsers();
     }
 
-    /**
-     * Check for each user if he's risky.
-     */
-    public void updateRiskyUsers() {
+    private void updateRiskyUsers() {
         // Reset risky users
         users.forEach(u -> {
             if (u.getStatus().equals(UserStatus.RISKY)) {
@@ -80,7 +57,9 @@ public class Controller {
         });
 
         // Update risky users
-        users.forEach(u -> u.checkRisky());
+        users.forEach(u -> {
+            u.updateRiskyStatus();
+        });
     }
 
     /**
@@ -90,7 +69,6 @@ public class Controller {
      */
     public void declareInfected(final User u) {
         u.declareInfected();
-        updateViews();
     }
 
     /**
@@ -100,7 +78,6 @@ public class Controller {
      */
     public void removeContact(final User a, final User b) {
         a.removeContact(b);
-        updateViews();
     }
 
 }

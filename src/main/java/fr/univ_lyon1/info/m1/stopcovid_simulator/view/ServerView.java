@@ -1,6 +1,7 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.controller.Controller;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.Observer;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.RiskStrategy;
@@ -15,7 +16,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class ServerView extends VBox { // TODO implement observer
+public class ServerView extends VBox implements Observer {
 
     private final VBox gui = new VBox();
     private final Controller controller;
@@ -23,20 +24,18 @@ public class ServerView extends VBox { // TODO implement observer
     private final ComboBox<User> rightUserComboBox = new ComboBox<>();
     private final VBox meetBox = new VBox();
     private final VBox startegyBox = new VBox();
-    private final MainView mainView;
     static final int PADDING = 20;
 
     /**
      * Create ServerView and initialise meetBox.
      *
      * @param controller
-     * @param mainView
      */
-    public ServerView(final Controller controller, final MainView mainView) {
+    public ServerView(final Controller controller) {
         this.controller = controller;
-        this.mainView = mainView;
         initStrategyBox();
         initMeetBox();
+        controller.getUsers().forEach(u -> u.attach(this));
     }
 
     private void initStrategyBox() {
@@ -57,7 +56,6 @@ public class ServerView extends VBox { // TODO implement observer
 
     private void onStrategyChange(final RiskStrategy riskStrategy) {
         controller.setRiskStrategy(riskStrategy);
-        mainView.updateViews();
     }
 
     private void initMeetBox() {
@@ -92,17 +90,16 @@ public class ServerView extends VBox { // TODO implement observer
             return;
         }
         controller.addMeet(a, b);
-        mainView.updateViews();
     }
 
     /**
     * Update the server view. Display risky users.
     */
-    public void updateView() {
+    public void update() {
         gui.getChildren().clear();
         gui.getChildren().add(new Label("Risky users:"));
         for (User u : controller.getUsers()) {
-            if (u.getStatus() == UserStatus.RISKY) {
+            if (u.getStatus().equals(UserStatus.RISKY)) {
                 gui.getChildren().add(new Label(u.getName()));
             }
         }

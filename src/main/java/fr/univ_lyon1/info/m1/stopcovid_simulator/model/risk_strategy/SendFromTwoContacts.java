@@ -15,12 +15,12 @@ public class SendFromTwoContacts implements RiskStrategy {
         }
         List<User> contacts = new ArrayList<>();
         cu.getMeets().forEach((u, i) -> {
-            if (i >= 2) {
+            if (!u.getStatus().equals(UserStatus.INFECTED) && i >= 2) {
                 contacts.add(u);
             }
         });
         return contacts;
-        // TODO vérifier que cet algo marche
+        // TODO vérifier que cet algo marche (@test)
     }
 
     @Override

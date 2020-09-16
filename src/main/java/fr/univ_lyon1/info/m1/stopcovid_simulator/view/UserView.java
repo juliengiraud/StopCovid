@@ -1,6 +1,7 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.controller.Controller;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.Observer;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -8,14 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class UserView { // TODO implement observer
+public class UserView implements Observer {
 
     private final VBox gui = new VBox();
     private final VBox contacts = new VBox();
     private final Label status;
     private final User user;
     private final Controller controller;
-    private static final int BUTTON_PADDING_LEFT = 20;
 
     UserView(final Controller controller, final User user, final VBox usersBox) {
         this.controller = controller;
@@ -23,6 +23,7 @@ public class UserView { // TODO implement observer
         this.status = new Label(user.getStatus().getName());
         initView();
         usersBox.getChildren().add(gui);
+        user.attach(this);
     }
 
     private void initView() {
@@ -77,10 +78,8 @@ public class UserView { // TODO implement observer
         });
     }
 
-    /**
-     * Update user view.
-     */
-    public void updateView() {
+    @Override
+    public void update() {
         updateStatus();
         updateContacts();
     }

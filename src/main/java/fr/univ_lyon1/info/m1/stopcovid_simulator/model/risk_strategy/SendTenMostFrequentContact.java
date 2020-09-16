@@ -19,15 +19,15 @@ public class SendTenMostFrequentContact implements RiskStrategy {
         List<User> contacts = new ArrayList<>();
         ArrayList<Map.Entry<User, Integer>> sortedMeets = new ArrayList<>(cu.getMeets().entrySet());
         sortedMeets.sort(Map.Entry.comparingByValue());
-        // TODO vérifier que la liste de contacts est bien triée par fréquence de rencontre
+        // TODO vérifier que la liste de contacts est bien triée par fréquence de rencontre (@test)
 
         int i = 0;
-        sortedMeets.forEach(u -> {
-            if (i < LIMIT) {
-                contacts.add(u.getKey());
+        sortedMeets.forEach(s -> { // s for set
+            if (!s.getKey().equals(UserStatus.INFECTED) && i < LIMIT) {
+                contacts.add(s.getKey());
             }
         });
-        // TODO vérifier qu'on ne dépasse pas une taille de 10
+        // TODO vérifier qu'on ne dépasse pas une taille de 10 (@test)
 
         return contacts;
     }
