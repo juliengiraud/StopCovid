@@ -20,6 +20,7 @@ public class SendFromTwoContacts implements RiskStrategy {
             }
         });
         return contacts;
+        // TODO vérifier que cet algo marche
     }
 
     @Override

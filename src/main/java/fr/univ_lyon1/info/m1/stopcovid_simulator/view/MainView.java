@@ -7,6 +7,7 @@ import java.util.List;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,6 +19,7 @@ public class MainView extends HBox implements StopCovidView {
     private final ServerView serverView;
     private final Controller controller;
     private final Stage stage;
+    private static final int PREFERED_WIDTH = 200;
 
     /** View for the whole application.
      * @param stage The JavaFX stage where everything will be displayed.
@@ -46,7 +48,8 @@ public class MainView extends HBox implements StopCovidView {
         stage.show();
     }
 
-    private VBox initAndGetUsersBox() {
+    private ScrollPane initAndGetUsersBox() {
+        final ScrollPane panel = new ScrollPane();
         final VBox usersBox = new VBox();
 
         usersBox.getChildren().add(new Label("Users"));
@@ -54,7 +57,9 @@ public class MainView extends HBox implements StopCovidView {
         for (User u : controller.getUsers()) {
             usersView.add(new UserView(controller, u, usersBox)); // Create usersView access
         }
-        return usersBox;
+        panel.setContent(usersBox);
+        panel.setPrefWidth(PREFERED_WIDTH);
+        return panel;
     }
 
     /**

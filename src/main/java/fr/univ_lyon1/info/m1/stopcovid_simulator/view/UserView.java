@@ -15,6 +15,7 @@ public class UserView { // TODO implement observer
     private final Label status;
     private final User user;
     private final Controller controller;
+    private static final int BUTTON_PADDING_LEFT = 20;
 
     UserView(final Controller controller, final User user, final VBox usersBox) {
         this.controller = controller;
@@ -56,7 +57,7 @@ public class UserView { // TODO implement observer
 
         // For each contact
         user.getMeets().forEach((u, i) -> {
-            Label contactLabel = new Label(String.format("%s (× %d)", u.getName(), i));
+            Label contactLabel = new Label(String.format("%s: %d ", u.getName(), i));
 
             final HBox box = new HBox();
             final Button xButton = new Button("x");

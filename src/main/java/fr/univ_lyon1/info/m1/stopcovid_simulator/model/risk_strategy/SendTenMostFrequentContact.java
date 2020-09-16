@@ -19,6 +19,7 @@ public class SendTenMostFrequentContact implements RiskStrategy {
         List<User> contacts = new ArrayList<>();
         ArrayList<Map.Entry<User, Integer>> sortedMeets = new ArrayList<>(cu.getMeets().entrySet());
         sortedMeets.sort(Map.Entry.comparingByValue());
+        // TODO vérifier que la liste de contacts est bien triée par fréquence de rencontre
 
         int i = 0;
         sortedMeets.forEach(u -> {
@@ -26,6 +27,8 @@ public class SendTenMostFrequentContact implements RiskStrategy {
                 contacts.add(u.getKey());
             }
         });
+        // TODO vérifier qu'on ne dépasse pas une taille de 10
+
         return contacts;
     }
 

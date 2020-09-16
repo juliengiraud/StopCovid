@@ -24,7 +24,7 @@ public class ServerView extends VBox { // TODO implement observer
     private final VBox meetBox = new VBox();
     private final VBox startegyBox = new VBox();
     private final MainView mainView;
-    static final int STRATEGY_BOX_PADDING_Y = 20;
+    static final int PADDING = 20;
 
     /**
      * Create ServerView and initialise meetBox.
@@ -47,7 +47,7 @@ public class ServerView extends VBox { // TODO implement observer
         cb.setItems(list);
         cb.getSelectionModel().select(0);
         cb.setOnAction(event -> onStrategyChange(cb.getValue()));
-        startegyBox.setPadding(new Insets(STRATEGY_BOX_PADDING_Y, 0, STRATEGY_BOX_PADDING_Y, 0));
+        startegyBox.setPadding(new Insets(PADDING, 0, PADDING, 0));
 
         startegyBox.getChildren().add(new Label("Select risk strategy:"));
         startegyBox.getChildren().add(cb);
@@ -70,8 +70,13 @@ public class ServerView extends VBox { // TODO implement observer
         final Button meetBtn = new Button("Meet!");
         meetBtn.setOnAction(event -> onMeetBtnClick());
 
-        meetBox.getChildren().addAll(l, new HBox(leftUserComboBox, rightUserComboBox), meetBtn,
-                new Separator(), gui);
+        Label space = new Label(" "); // Sorry
+
+        Separator separator = new Separator();
+        separator.setPadding(new Insets(PADDING, 0, PADDING / 2, 0));
+
+        meetBox.getChildren().addAll(l, new HBox(leftUserComboBox, rightUserComboBox), space,
+                meetBtn, separator, gui);
 
         this.getChildren().add(meetBox);
     }

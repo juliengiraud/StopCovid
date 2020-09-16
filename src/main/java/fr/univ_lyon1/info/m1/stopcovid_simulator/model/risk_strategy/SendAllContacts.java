@@ -14,6 +14,7 @@ public class SendAllContacts implements RiskStrategy {
             return new ArrayList<>();
         }
         return new ArrayList<>(cu.getMeets().keySet());
+        // TODO vérifier que l'algo marche
     }
 
     @Override
