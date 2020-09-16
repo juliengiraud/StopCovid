@@ -13,13 +13,15 @@ public class ControllerTest {
 
     @BeforeEach
     void createController() {
-        controller = new Controller(2);
-        // TODO utiliser le builder pour passer des users à la volée ici, voir TP 3 je crois
+        controller = new ControllerBuilder()
+                .addUser("1")
+                .addUser("2")
+                .build();
     }
 
     @Test
     void createUsersTest() {
-        assertThat(controller.getUsers().size(), is(5));
+        assertThat(controller.getUsers().size(), is(2));
     }
 
     @Test
