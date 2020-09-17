@@ -20,7 +20,6 @@ public class SendAllContacts implements RiskStrategy {
             }
         });
         return contacts;
-        // TODO vérifier que l'algo marche (@test)
     }
 
     @Override

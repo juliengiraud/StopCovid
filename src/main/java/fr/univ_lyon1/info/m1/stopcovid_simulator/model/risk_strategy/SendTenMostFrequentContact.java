@@ -4,6 +4,7 @@ import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserStatus;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,16 +19,14 @@ public class SendTenMostFrequentContact implements RiskStrategy {
         }
         List<User> contacts = new ArrayList<>();
         ArrayList<Map.Entry<User, Integer>> sortedMeets = new ArrayList<>(cu.getMeets().entrySet());
-        sortedMeets.sort(Map.Entry.comparingByValue());
-        // TODO vérifier que la liste de contacts est bien triée par fréquence de rencontre (@test)
+        sortedMeets.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
-        int i = 0;
-        sortedMeets.forEach(s -> { // s for set
-            if (!s.getKey().equals(UserStatus.INFECTED) && i < LIMIT) {
-                contacts.add(s.getKey());
+        for (int i = 0; i < LIMIT; i++) {
+            User user = sortedMeets.get(i).getKey();
+            if (!user.equals(UserStatus.INFECTED)) {
+                contacts.add(user);
             }
-        });
-        // TODO vérifier qu'on ne dépasse pas une taille de 10 (@test)
+        }
 
         return contacts;
     }
