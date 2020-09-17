@@ -31,7 +31,7 @@ public class MainView extends HBox {
                     final Controller controller) {
         this.stage = stage;
         this.controller = controller;
-        this.serverView = new ServerView(controller);
+        this.serverView = new ServerView(controller, this);
 
         initWindow(width, height);
     }
@@ -41,8 +41,7 @@ public class MainView extends HBox {
         stage.setTitle("Simulator");
 
         this.getChildren().addAll(initAndGetUsersBox(), // Add UsersView to window
-                new Separator(),
-                serverView); // Add ServerView to window
+                new Separator(), serverView); // Add ServerView to window
 
         stage.setScene(new Scene(this, width, height));
         stage.show();
@@ -62,4 +61,16 @@ public class MainView extends HBox {
         return panel;
     }
 
+    /**
+     * When the meet button is clicked. Gets all the "next meet" checkbox from UserViews and
+     * makes every user meet each other.
+     */
+    public void onMeetBtnClick() {
+        List<UserView> nextMeetUsers = UserView.getNextMeetUsers(usersView);
+        for (int i = 0; i < nextMeetUsers.size() - 1; i++) {
+            for (int j = i + 1; j < nextMeetUsers.size(); j++) {
+                controller.addMeet(nextMeetUsers.get(i).getUser(), nextMeetUsers.get(j).getUser());
+            }
+        }
+    }
 }

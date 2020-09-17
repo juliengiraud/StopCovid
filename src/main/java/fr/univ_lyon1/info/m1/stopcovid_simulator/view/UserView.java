@@ -5,12 +5,17 @@ import fr.univ_lyon1.info.m1.stopcovid_simulator.model.Observer;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserView implements Observer {
 
+    private final CheckBox nextMeetCheckBox = new CheckBox("Next Meet ?");
     private final VBox gui = new VBox();
     private final VBox contacts = new VBox();
     private final Label status;
@@ -32,9 +37,14 @@ public class UserView implements Observer {
         declareBtn.setOnAction(event -> {
             controller.declareInfected(user);
         });
-        gui.getChildren().addAll(l, new Label("Contacts:"), contacts, declareBtn, status);
+        gui.getChildren().addAll(l, new Label("Contacts:"), contacts, declareBtn,
+                status, nextMeetCheckBox);
         gui.setStyle("-fx-padding: 10; -fx-border-width: 1;"
                 + " -fx-border-radius: 5; -fx-border-color: #505050;");
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -76,6 +86,29 @@ public class UserView implements Observer {
             box.getChildren().add(xButton);
             contacts.getChildren().add(box);
         });
+    }
+
+    /**
+     * Checks if this user has the next meet checkbox checked.
+     * @return True if the checkbox is selected, False otherwise
+     */
+    public boolean nextMeet() {
+        return nextMeetCheckBox.isSelected();
+    }
+
+    /**
+     * Get all the UserView that has the next meet checkbox checked.
+     * @param users The list of all UserView
+     * @return The UserViews with the next meet checkbox checked
+     */
+    public static ArrayList<UserView> getNextMeetUsers(final List<UserView> users) {
+        ArrayList<UserView> nextMeetUsers = new ArrayList<>(users);
+        for (int i = 0; i < nextMeetUsers.size(); i++) {
+            if (!nextMeetUsers.get(i).nextMeet()) {
+                nextMeetUsers.remove(i--);
+            }
+        }
+        return nextMeetUsers;
     }
 
     @Override

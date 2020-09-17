@@ -8,20 +8,17 @@ import fr.univ_lyon1.info.m1.stopcovid_simulator.model.risk_strategy.RiskStrateg
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class ServerView extends VBox implements Observer {
 
+    private final MainView mainView;
     private final VBox gui = new VBox();
     private final Controller controller;
-    private final ComboBox<User> leftUserComboBox = new ComboBox<>();
-    private final ComboBox<User> rightUserComboBox = new ComboBox<>();
     private final VBox meetBox = new VBox();
     private final VBox startegyBox = new VBox();
     static final int PADDING = 20;
@@ -30,8 +27,10 @@ public class ServerView extends VBox implements Observer {
      * Create ServerView and initialise meetBox.
      *
      * @param controller
+     * @param mainView
      */
-    public ServerView(final Controller controller) {
+    public ServerView(final Controller controller, final MainView mainView) {
+        this.mainView = mainView;
         this.controller = controller;
         initStrategyBox();
         initMeetBox();
@@ -63,33 +62,15 @@ public class ServerView extends VBox implements Observer {
 
         ObservableList<User> usersObs = FXCollections.observableArrayList(controller.getUsers());
 
-        leftUserComboBox.setItems(FXCollections.observableArrayList(usersObs));
-        rightUserComboBox.setItems(FXCollections.observableArrayList(usersObs));
         final Button meetBtn = new Button("Meet!");
-        meetBtn.setOnAction(event -> onMeetBtnClick());
-
-        Label space = new Label(" "); // Sorry
+        meetBtn.setOnAction(event -> mainView.onMeetBtnClick());
 
         Separator separator = new Separator();
         separator.setPadding(new Insets(PADDING, 0, PADDING / 2, 0));
 
-        meetBox.getChildren().addAll(l, new HBox(leftUserComboBox, rightUserComboBox), space,
-                meetBtn, separator, gui);
+        meetBox.getChildren().addAll(l, meetBtn, separator, gui);
 
         this.getChildren().add(meetBox);
-    }
-
-    private void onMeetBtnClick() {
-        final User a = leftUserComboBox.getValue();
-        final User b = rightUserComboBox.getValue();
-        if (a == null || b == null || a == b) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Please select two different users that will meet");
-            alert.showAndWait();
-            return;
-        }
-        controller.addMeet(a, b);
     }
 
     /**
