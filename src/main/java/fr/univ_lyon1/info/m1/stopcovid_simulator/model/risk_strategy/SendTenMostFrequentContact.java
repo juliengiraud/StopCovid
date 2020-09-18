@@ -23,7 +23,7 @@ public class SendTenMostFrequentContact implements RiskStrategy {
 
         for (int i = 0; i < LIMIT && i < sortedMeets.size(); i++) {
             User user = sortedMeets.get(i).getKey();
-            if (!user.equals(UserStatus.INFECTED)) {
+            if (!user.getStatus().equals(UserStatus.INFECTED)) {
                 contacts.add(user);
             }
         }

@@ -60,8 +60,6 @@ public class ServerView extends VBox implements Observer {
     private void initMeetBox() {
         final Label l = new Label("Proximity simulator");
 
-        ObservableList<User> usersObs = FXCollections.observableArrayList(controller.getUsers());
-
         final Button meetBtn = new Button("Meet!");
         meetBtn.setOnAction(event -> mainView.onMeetBtnClick());
 
