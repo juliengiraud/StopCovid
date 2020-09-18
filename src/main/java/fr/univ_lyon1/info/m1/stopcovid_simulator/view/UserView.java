@@ -10,9 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UserView implements Observer {
 
     private final CheckBox nextMeetCheckBox = new CheckBox("Next Meet ?");
@@ -36,6 +33,9 @@ public class UserView implements Observer {
         final Button declareBtn = new Button("Declare Infected");
         declareBtn.setOnAction(event -> {
             controller.declareInfected(user);
+        });
+        nextMeetCheckBox.setOnAction(event -> {
+            controller.setInNextMeet(user, nextMeetCheckBox.isSelected());
         });
         gui.getChildren().addAll(l, new Label("Contacts:"), contacts, declareBtn,
                 status, nextMeetCheckBox);
@@ -88,32 +88,14 @@ public class UserView implements Observer {
         });
     }
 
-    /**
-     * Checks if this user has the next meet checkbox checked.
-     * @return True if the checkbox is selected, False otherwise
-     */
-    public boolean nextMeet() {
-        return nextMeetCheckBox.isSelected();
-    }
-
-    /**
-     * Get all the UserView that has the next meet checkbox checked.
-     * @param users The list of all UserView
-     * @return The UserViews with the next meet checkbox checked
-     */
-    public static ArrayList<UserView> getNextMeetUsers(final List<UserView> users) {
-        ArrayList<UserView> nextMeetUsers = new ArrayList<>(users);
-        for (int i = 0; i < nextMeetUsers.size(); i++) {
-            if (!nextMeetUsers.get(i).nextMeet()) {
-                nextMeetUsers.remove(i--);
-            }
-        }
-        return nextMeetUsers;
+    private void updateNextMeet() {
+        nextMeetCheckBox.setSelected(controller.getInNextMeet(user));
     }
 
     @Override
     public void update() {
         updateStatus();
         updateContacts();
+        updateNextMeet();
     }
 }

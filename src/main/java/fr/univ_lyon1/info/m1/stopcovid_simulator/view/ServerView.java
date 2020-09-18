@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 
 public class ServerView extends VBox implements Observer {
 
-    private final MainView mainView;
     private final VBox gui = new VBox();
     private final Controller controller;
     private final VBox meetBox = new VBox();
@@ -27,10 +26,8 @@ public class ServerView extends VBox implements Observer {
      * Create ServerView and initialise meetBox.
      *
      * @param controller
-     * @param mainView
      */
-    public ServerView(final Controller controller, final MainView mainView) {
-        this.mainView = mainView;
+    public ServerView(final Controller controller) {
         this.controller = controller;
         initStrategyBox();
         initMeetBox();
@@ -61,7 +58,7 @@ public class ServerView extends VBox implements Observer {
         final Label l = new Label("Proximity simulator");
 
         final Button meetBtn = new Button("Meet!");
-        meetBtn.setOnAction(event -> mainView.onMeetBtnClick());
+        meetBtn.setOnAction(event -> controller.onMeetBtnClick());
 
         Separator separator = new Separator();
         separator.setPadding(new Insets(PADDING, 0, PADDING / 2, 0));

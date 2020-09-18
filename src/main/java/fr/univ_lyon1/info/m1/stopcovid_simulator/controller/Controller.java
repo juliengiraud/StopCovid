@@ -14,6 +14,7 @@ import java.util.List;
 public class Controller {
 
     private final List<User> users = new ArrayList<>();
+    private List<User> nextMeetUsers = new ArrayList<>();
 
     /**
      * Get all users from UserService.
@@ -36,6 +37,45 @@ public class Controller {
     public List<RiskStrategy> getStrategies() {
         return Arrays.asList(new SendAllContacts(), new SendFromTwoContacts(),
                 new SendTenMostFrequentContact());
+    }
+
+    /**
+     * Add or remove a user in the next meet list.
+     * @param u User to add
+     * @param in True -> add / False -> remove
+     */
+    public void setInNextMeet(final User u, final boolean in) {
+        if (in) {
+            if (!nextMeetUsers.contains(u)) {
+                nextMeetUsers.add(u);
+            }
+        } else {
+            nextMeetUsers.remove(u);
+        }
+    }
+
+    /**
+     * Check if the user is in the next meet list.
+     * @param user User to check
+     * @return boolean
+     */
+    public boolean getInNextMeet(final User user) {
+        return nextMeetUsers.contains(user);
+    }
+
+    /**
+     * When meet button is clicked, all the users in the next meet list meet each other.
+     * The list clears itself.
+     */
+    public void onMeetBtnClick() {
+        while (nextMeetUsers.size() > 0) {
+            User current = nextMeetUsers.get(0);
+            nextMeetUsers.remove(0);
+            for (int j = 0; j < nextMeetUsers.size(); j++) {
+                addMeet(current, nextMeetUsers.get(j));
+            }
+            current.notifyObservers();
+        }
     }
 
     /**
