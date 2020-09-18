@@ -21,7 +21,7 @@ public class SendTenMostFrequentContact implements RiskStrategy {
         ArrayList<Map.Entry<User, Integer>> sortedMeets = new ArrayList<>(cu.getMeets().entrySet());
         sortedMeets.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
-        for (int i = 0; i < LIMIT; i++) {
+        for (int i = 0; i < LIMIT && i < sortedMeets.size(); i++) {
             User user = sortedMeets.get(i).getKey();
             if (!user.equals(UserStatus.INFECTED)) {
                 contacts.add(user);
