@@ -10,6 +10,7 @@ import java.util.List;
 public final class UserDAO {
 
     private static UserDAO instance = new UserDAO();
+    private static final String USER_FILE = "src/main/resources/users.csv";
 
     private UserDAO() {
 
@@ -25,18 +26,16 @@ public final class UserDAO {
      */
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("users.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(USER_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 users.add(new User(line));
             }
-            br.close();
-            return users;
         } catch (IOException e) {
-
+            System.out.println("CSV / user file not found");
         }
 
-        return new ArrayList<>();
+        return users;
     }
 
     /**
@@ -45,14 +44,14 @@ public final class UserDAO {
      */
     public void saveUsers(final List<User> users) {
         try {
-            FileWriter writer = new FileWriter("users.csv");
+            FileWriter writer = new FileWriter(USER_FILE, false);
             for (User user : users) {
                 writer.append(user.toString() + "\n");
             }
             writer.flush();
             writer.close();
         } catch (IOException e) {
-
+            System.out.println("CSV / user file not found");
         }
     }
 }
