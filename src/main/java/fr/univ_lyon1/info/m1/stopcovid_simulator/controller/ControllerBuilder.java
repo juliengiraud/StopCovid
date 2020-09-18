@@ -1,6 +1,9 @@
 package fr.univ_lyon1.info.m1.stopcovid_simulator.controller;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
+import fr.univ_lyon1.info.m1.stopcovid_simulator.model.UserDAO;
+
+import java.util.List;
 
 public class ControllerBuilder {
 
@@ -23,6 +26,18 @@ public class ControllerBuilder {
      */
     public Controller build() {
         controller.getUsers().sort(User::compareTo);
+
+        if (controller.getUsers().size() == 0) {
+            List<User> users = UserDAO.getInstance().getUsers();
+            List<User> usersController = controller.getUsers();
+            for (User u: users) {
+                usersController.add(u);
+            }
+        } else {
+            UserDAO.getInstance().saveUsers(controller.getUsers());
+        }
+
+
         return controller;
     }
 

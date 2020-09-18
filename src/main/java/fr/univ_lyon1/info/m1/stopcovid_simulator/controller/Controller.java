@@ -41,17 +41,18 @@ public class Controller {
 
     /**
      * Add or remove a user in the next meet list.
-     * @param u User to add
+     * @param user User to add
      * @param in True -> add / False -> remove
      */
-    public void setInNextMeet(final User u, final boolean in) {
+    public void setInNextMeet(final User user, final boolean in) {
         if (in) {
-            if (!nextMeetUsers.contains(u)) {
-                nextMeetUsers.add(u);
+            if (!nextMeetUsers.contains(user)) {
+                nextMeetUsers.add(user);
             }
         } else {
-            nextMeetUsers.remove(u);
+            nextMeetUsers.remove(user);
         }
+        user.notifyObservers();
     }
 
     /**
@@ -119,5 +120,4 @@ public class Controller {
     public void removeContact(final User a, final User b) {
         a.removeContact(b);
     }
-
 }
