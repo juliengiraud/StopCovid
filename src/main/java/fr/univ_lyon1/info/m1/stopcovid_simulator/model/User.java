@@ -123,6 +123,16 @@ public class User implements Comparable<User> {
         return name.compareTo(user.name);
     }
 
+    @Override
+    public boolean equals(final Object user) {
+        return ((User) user).name.equals(name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.length();
+    }
+
     /**
      * Add new observer to the current user.
      *

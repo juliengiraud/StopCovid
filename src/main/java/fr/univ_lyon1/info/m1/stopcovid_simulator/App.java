@@ -29,7 +29,11 @@ public class App extends Application {
      */
     @Override
     public void start(final Stage stage) {
-        Controller controller = new ControllerBuilder().build();
+        Controller controller = new ControllerBuilder()
+                .addUser("BuildUser Sally")
+                .addUser("BuildUser Roxanne")
+                .addUser("BuildUser Alberto")
+                .build(true);
 
         new MainView(stage, WIDTH, HEIGHT, controller);
 
