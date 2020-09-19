@@ -103,6 +103,12 @@ L'avantage de cette méthode est qu'il est possible de changer de technologie de
 
 ### Builder
 
+Pour des raisons évidentes de sécurité, nous avons une forte séparation du personnel qui travail sur notre application. Ainsi, les personnes chargées de gérer la base de données n'ont pas accès au code du contrôleur, et vice-versa. Cependant, à l'initialisation du contrôleur nous avions besoin d'ajouter des utilisateurs dans l'application, nous avons donc mis en place un builder sur le contrôleur afin de résoudre ce problème.
+
+![Schéma UML à mettre](rapport/builder.png)
+
+Plus sérieusement, nous avons mis en place le pattern builder sur le contrôleur afin de lui ajouter des utilisateurs depuis sa ligne de code d'initialisation.
+
 ```java
 Controller controller = new ControllerBuilder()
         .addUser("Sally")
@@ -110,6 +116,8 @@ Controller controller = new ControllerBuilder()
         .addUser("Alberto")
         .build();
 ```
+
+En réalité ce pattern n'est pas du tout essentiel au bon fonctionnement du projet, mais c'est une solution élégante et pratique pour ajouter les utilisateurs au contrôleur. Nous en avons également profité pour pour utiliser la méthode de sauvegarde de notre DAO. En effet, les utilisateurs rajoutés par le builder sont automatiquement sauvegardés dans le fichier CSV à condition d'en informer le builder avec un `.build(true)`.
 
 ### Strategy
 
