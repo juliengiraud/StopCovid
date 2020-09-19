@@ -1,6 +1,6 @@
 # Le projet StopCovid
 
-![STOP (image libre de droit)](stop.png) ![COVID (image libre de droit)](covid.png)
+![STOP (image libre de droit)](rapport/stop.png) ![COVID (image libre de droit)](rapport/covid.png)
 
 Réalisé par **Julien Giraud** (P1704709) et **Ulysse Regnier** (P1711637)
 
@@ -13,7 +13,7 @@ Pour luter efficacement contre le virus nous informons les utilisateurs à risqu
 
 | Interface utilisateur | Interface serveur |
 | --------------------- | ----------------- |
-| ![Visuel utilisateur](userView.png) | ![Visuel serveur](serverView.png) |
+| ![Visuel utilisateur](rapport/userView.png) | ![Visuel serveur](rapport/serverView.png) |
 
 Sur notre prototype vous trouverez ces interfaces dans la même fenêtre.
 
