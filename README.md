@@ -67,6 +67,26 @@ Après utilisation, on constate que chaque modification faite sur l'une des deux
 
 Conclusion, notre super MVC fonctionne !
 
+### Observer
+
+Une fois l'architecture MVC en place nous avions absolument besoin d'un pattern observer afin de gérer la mise à jour des composants graphiques.
+
+![Schéma UML à mettre](rapport/observer.png)
+
+Cette solution est vraiment indispensable car notre ancien système de mise à jour des vues était très mauvais en deux points.
+
+- Il y avait des spaghettis d'appels de fonctions avec des noms différents.
+- Le mécanisme utilisé se résumait à stocker des références de partout et parcourir toutes les vues afin de leur demander à toutes de se mettre à jour.
+
+L'implémentation du pattern observer a permis de clarifier ces fonctions de mise à jour et de gagner en perfornance car nous ne mettons à jour que les composants graphiques qui ont besoin de l'être.
+
+#### *L'anecdote de ce pattern*
+
+> Nous avons tous les deux déjà utilisé le pattern observer avec Java dans le cadre d'un TP pendant notre DUT informatique, il y a deux ans. Nous venons seulement de comprendre que l'objectif de ces TP était de nous faire utiliser un système de notifications.  
+> Mieux vaut trop tard que jamais !
+
+Bilan du pattern, le code relatif aux mises à jour graphiques est plus facile à lire, plus performant et plus facile à maintenir que notre implémentation précédente.
+
 ### Builder
 
 ```java
@@ -76,8 +96,6 @@ Controller controller = new ControllerBuilder()
         .addUser("Alberto")
         .build();
 ```
-
-### Observer
 
 ### Strategy
 
