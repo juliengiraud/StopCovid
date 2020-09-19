@@ -101,6 +101,22 @@ L'avantage de cette méthode est qu'il est possible de changer de technologie de
 
 > Ça tombe plutôt bien car pour des raisons budgétaires nous avons dû nous résoudre à abandonner la base de données super sécurisée au profit d'un fichier CSV.
 
+### Strategy
+
+Notre classe modèle a besoin de mettre en oeuvre différents algorithmes afin de choisir quels utilisateurs sont risqués. Afin d'abstraire l'implémentation de ces algorithmes du point de vue de la classe User nous avons utilisé le pattern stratégie.
+
+![Schéma UML à mettre](rapport/strategy.png)
+
+Ce pattern nous permet d'avoir autant d'implémentations que l'on veut pour l'algorithme, sans modifier une seule ligne de code dans la classe User.
+
+```java
+List<User> riskyUsers = riskStrategy.getRiskyContacts(this);
+```
+
+Concrètement la classe User se contente d'appeler la méthode `getRiskyContacts` sur un objet de type `RiskStrategy` (voir ci-dessus). Cet objet correspond sistématiquement à une stratégie spécifique, sélectionnée par le serveur.
+
+Ce pattern est redoutablement efficace pour abstraire différentes versions d'une même méthode, pour autant son implémentation se résume à une utilisation basique des interfaces Java.
+
 ### Builder
 
 Pour des raisons évidentes de sécurité, nous avons une forte séparation du personnel qui travail sur notre application. Ainsi, les personnes chargées de gérer la base de données n'ont pas accès au code du contrôleur, et vice-versa. Cependant, à l'initialisation du contrôleur nous avions besoin d'ajouter des utilisateurs dans l'application, nous avons donc mis en place un builder sur le contrôleur afin de résoudre ce problème.
@@ -119,6 +135,20 @@ Controller controller = new ControllerBuilder()
 
 En réalité ce pattern n'est pas du tout essentiel au bon fonctionnement du projet, mais c'est une solution élégante et pratique pour ajouter les utilisateurs au contrôleur. Nous en avons également profité pour pour utiliser la méthode de sauvegarde de notre DAO. En effet, les utilisateurs rajoutés par le builder sont automatiquement sauvegardés dans le fichier CSV à condition d'en informer le builder avec un `.build(true)`.
 
-### Strategy
+## Tests
+
+Ici j'ai envie qu'on parle du casse-tête que c'est d'immaginer toutes les combinaisons d'action d'une application
+
+J'ai aussi envie qu'on parle de la propreté du code, surtout avec le test du checkstyle parce que sérieux, faut avouer que même si ça nous fait chier ça force à coder propre, à bien commenter et ça au long terme c'est vachement pratique
+
+Faut aussi expliquer (sans trop être négatif) qu'on est loin d'avoir testé toutes les lignes de code et tous les cas d'utilisation, dans un monde idéal rien que pour le modèle à chaque cas d'utilisation spécifique avec A et B action en entrée il faudrait vérifier le résultat de (A.B), (A.-B), (-A.B), (-A.-B). Nous on a plutôt tendance à en vérifier un ou deux sur les 4 pour chaque cas...
 
 ## Étique
+
+Là faut parler du fait que les utilisateurs savent qui ils ont rencontré, c'est quand même pas ouf, faudrait au minimum remplacer les noms par les ID des users
+
+Bon ensuite j'aimerai une petite blague de genre 3 lignes sur la sécurité de notre base de données claquée au sol
+
+Ensuite ya le côté serveur qui connait la totalité des données, en vraie c'est dommage parce que vu que c'est l'utilisateur qui informe sa liste de contacte on pourrait immaginer une application où le serveur connais juste la liste des utilisateurs sans connaître leurs contacts -> dans ce cas là il faudrait rajouter une couche de séparation : vue utilisateur, BACK UTILISATEUR, vue serveur, back serveur
+
+Il faudrait dire qu'une bonne idée d'évolution serait de remplacer la liste de contacts par une liste de rencontre avec "rencontre" défini comme un lieu et une date, comme ça tu sais pas qui tu as rencontré et tu peux les supprimer après 3 semaines automatiquement par exemple (si pas de contamination), ça serait d'autant mieux si avec ça on ajoute l'idée que le serveur ne connais pas les rencontres et qu'elles sont enregistrées dans les données des appli utilisateurs
