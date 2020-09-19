@@ -30,8 +30,9 @@ class UserTest {
     }
 
     @Test
-    void getRiskyTest() {
+    void getRiskyTest() { // ici
         // Given
+        // implicitement ici tu as un `User.setRiskStrategy(new SendAllContacts());`
         User a = new User("");
         a.declareInfected();
         User b = new User("");
@@ -44,7 +45,15 @@ class UserTest {
     }
 
     @Test
-    void getRiskyAfterTest() {
+    void getRiskyAfterTest() { // TODO normalement les 3 tests en rapport avec le risky devraient
+                               //  être fait pour chaque stratégie de test, il faudrait rajouter
+                               //  un package risk_strategy comme dans main avec une classe par
+                               //  implémentation de stratégie (du coup ça nous ferait 9 tests)
+                               //  Si tu es vraiment chaud tu peux aussi rajouter des tests où tu
+                               //  changes la stratégie en cours de route genre après avoir supprimé
+                               //  des contacts pour voir comment ça réagit, c'est le seul moyen de
+                               //  régresser le statut risky donc on peut avoir des résultats
+                               //  intéressants
         // Given
         User a = new User("");
         User b = new User("");
@@ -58,7 +67,7 @@ class UserTest {
     }
 
     @Test
-    void infectedNotRiskyTest() {
+    void infectedNotRiskyTest() { // ici
         // Given
         User a = new User("");
         a.declareInfected();
