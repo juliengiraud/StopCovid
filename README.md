@@ -42,7 +42,7 @@ Donner une motivation des choix d’architecture (et des patterns choisis) en s�
 
 Dans le cadre de ce projet nous avons mise en place pas moins de 6 design paterns qui ont chacun un role **primordiale** dans le bon fonctionnement de notre application.
 
-### Model-View-Controller (MVC)
+### Model View Controller (MVC)
 
 Toute l'**architecture** de notre application est basée sur un MVC afin de bien séparer les différentes parties du code.
 
@@ -87,6 +87,20 @@ L'implémentation du pattern observer a permis de clarifier ces fonctions de mis
 
 Bilan du pattern, le code relatif aux mises à jour graphiques est plus facile à lire, plus performant et plus facile à maintenir que notre implémentation précédente.
 
+### Data Access Object (DAO) et Singleton
+
+Lorsque notre application démarre le contrôleur est instancié, il a alors besoin de récupérer la liste des utilisateurs du système depuis une base de données super sécurisée. Pour éviter au contrôleur de gérer cette partie, nous avons implémenté un DAO qui fonctionne en singleton.
+
+![Schéma UML à mettre](rapport/dao-singleton.png)
+
+Le DAO s'occupe d'établir une connexion sécurisée à la base de données du système et il offre des méthodes publiques pour interragir avec celle-ci, sans se préocuper du mécanisme de connexion ou du langage de requête.
+
+Le singleton quant à lui permet de limiter les instances du DAO au nombre de une. Ainsi, un seul DAO est instancié et on ne fait qu'une seule connexion à la base de données.
+
+L'avantage de cette méthode est qu'il est possible de changer de technologie de base de données sans modifier une ligne de code dans le contrôleur.
+
+> Ça tombe plutôt bien car pour des raisons budgétaires nous avons dû nous résoudre à abandonner la base de données super sécurisée au profit d'un fichier CSV.
+
 ### Builder
 
 ```java
@@ -98,7 +112,5 @@ Controller controller = new ControllerBuilder()
 ```
 
 ### Strategy
-
-### DAO / Singleton
 
 ## Étique
