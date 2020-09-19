@@ -11,8 +11,6 @@ public class ControllerTest {
 
     private Controller controller;
 
-    // TODO rajouter le test du ControllerBuilder
-
     @BeforeEach
     void createController() {
         controller = new ControllerBuilder()
