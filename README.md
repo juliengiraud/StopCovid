@@ -40,20 +40,40 @@ Malheureusement nous n'avons pas réussi à générer un `.jar` qui s'exécute s
 
 Donner une motivation des choix d’architecture (et des patterns choisis) en s’aidant de **diagrammes simples** adaptés au degré de précision et au type d’explication. Donc des **diagrammes de classe, mais pas que** cela, et pas de plats de spaghettis générés automatiquement représentant tout le code.
 
-Dans le cadre de ce projet nous avons mise en place pas moins de 5 design paterns qui ont chacun un role primordiale dans le bon fonctionnement de notre application.
+Dans le cadre de ce projet nous avons mise en place pas moins de 6 design paterns qui ont chacun un role **primordiale** dans le bon fonctionnement de notre application.
 
-### MVC
+### Model-View-Controller (MVC)
+
+Toute l'**architecture** de notre application est basée sur un MVC afin de bien séparer les différentes parties du code.
+
+Notre MVC fonctionne de la façon suivante :
+
+- Le contrôleur à **accès** au model et la vue a accès au contrôleur.
+- La vue **demande** au contrôleur les informations à **afficher**, le contrôleur les récupèrent dans le modèle.
+- Lorsqu'une **action** se produit sur la vue (une rencontre par exemple), celle-ci **informe** le contrôleur qui mettra à jour modèle.
+- *Il y a également un système de notification pour les mises à jour de la vue, nous en parlons après.*
+
+![Schéma UML à mettre](rapport/mvc.png)
+
+Ainsi les vues sont complètement indépendantes du modèle.
+
+```java
+new MainView(stage, WIDTH, HEIGHT, controller);
+new MainView(new Stage(stage.getStyle()), WIDTH, HEIGHT, controller);
+```
+
+Nous avons utilisé le code ci-dessus afin de vérifier le bon fonctionnement de notre MVC. Il permet d'instancier deux fenêtres de l'application StopCovid branchées sur le même contrôleur.  
+Après utilisation, on constate que chaque modification faite sur l'une des deux fenêtres se retrouve instantanément faite sur l'autre, ce qui est logique puisqu'elles affichent les données du même modèle.
+
+Conclusion, notre super MVC fonctionne !
 
 ### Builder
 
 ```java
 Controller controller = new ControllerBuilder()
-        .addUser("a")
-        .addUser("z")
-        .addUser("e")
-        .addUser("r")
-        .addUser("t")
-        .addUser("y")
+        .addUser("Sally")
+        .addUser("Roxanne")
+        .addUser("Alberto")
         .build();
 ```
 
@@ -61,6 +81,6 @@ Controller controller = new ControllerBuilder()
 
 ### Strategy
 
-### DAO
+### DAO / Singleton
 
 ## Étique
