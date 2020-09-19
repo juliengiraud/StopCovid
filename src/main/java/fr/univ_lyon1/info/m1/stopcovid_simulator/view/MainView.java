@@ -2,8 +2,6 @@ package fr.univ_lyon1.info.m1.stopcovid_simulator.view;
 
 import fr.univ_lyon1.info.m1.stopcovid_simulator.controller.Controller;
 import fr.univ_lyon1.info.m1.stopcovid_simulator.model.User;
-import java.util.ArrayList;
-import java.util.List;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -15,11 +13,10 @@ import javafx.stage.Stage;
 
 public class MainView extends HBox {
 
-    private final List<UserView> usersView = new ArrayList<>();
     private final ServerView serverView;
     private final Controller controller;
     private final Stage stage;
-    private static final int PREFERED_WIDTH = 200;
+    private static final int PREFERED_WIDTH = 250;
 
     /** View for the whole application.
      * @param stage The JavaFX stage where everything will be displayed.
@@ -54,7 +51,7 @@ public class MainView extends HBox {
         usersBox.getChildren().add(new Label("Users"));
 
         for (User u : controller.getUsers()) {
-            usersView.add(new UserView(controller, u, usersBox)); // Create usersView access
+            usersBox.getChildren().add(new UserView(controller, u));
         }
         panel.setContent(usersBox);
         panel.setPrefWidth(PREFERED_WIDTH);

@@ -20,20 +20,19 @@ public class ControllerBuilder {
     /**
      * Builder method to get controller with data from the CSV file if asked.
      *
-     * @param includeCSV true if we need to load the file
+     * @param useCSV true if we need to load the file
      * @return controller
      */
-    public Controller build(final boolean includeCSV) {
-        if (includeCSV) {
+    public Controller build(final boolean useCSV) {
+        if (useCSV) {
             for (User u : UserDAO.getInstance().getUsers()) { // Load users from the CSV file
                 if (!controller.getUsers().contains(u)) {
                     controller.getUsers().add(u);
                 }
             }
+            // Save current list of users in the CSV file
+            UserDAO.getInstance().saveUsers(controller.getUsers());
         }
-
-        // Save current list of users in the CSV file
-        UserDAO.getInstance().saveUsers(controller.getUsers());
 
         // Sort users by name before to return controller
         controller.getUsers().sort(User::compareTo);

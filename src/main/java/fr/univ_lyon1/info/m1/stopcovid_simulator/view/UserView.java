@@ -10,21 +10,19 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class UserView implements Observer {
+public class UserView extends VBox implements Observer {
 
     private final CheckBox nextMeetCheckBox = new CheckBox("Next Meet ?");
-    private final VBox gui = new VBox();
     private final VBox contacts = new VBox();
     private final Label status;
     private final User user;
     private final Controller controller;
 
-    UserView(final Controller controller, final User user, final VBox usersBox) {
+    UserView(final Controller controller, final User user) {
         this.controller = controller;
         this.user = user;
         this.status = new Label(user.getStatus().getName());
         initView();
-        usersBox.getChildren().add(gui);
         user.attach(this);
     }
 
@@ -37,9 +35,9 @@ public class UserView implements Observer {
         nextMeetCheckBox.setOnAction(event -> {
             controller.setInNextMeet(user, nextMeetCheckBox.isSelected());
         });
-        gui.getChildren().addAll(l, new Label("Contacts:"), contacts, declareBtn,
+        getChildren().addAll(l, new Label("Contacts:"), contacts, declareBtn,
                 status, nextMeetCheckBox);
-        gui.setStyle("-fx-padding: 10; -fx-border-width: 1;"
+        setStyle("-fx-padding: 10; -fx-border-width: 1;"
                 + " -fx-border-radius: 5; -fx-border-color: #505050;");
     }
 
