@@ -48,6 +48,9 @@ public class User implements Comparable<User> {
     public void setStatus(final UserStatus status) {
         this.status = status;
         notifyObservers();
+        if (status == UserStatus.INFECTED) {
+            updateRiskyStatus();
+        }
     }
 
     public Map<User, Integer> getMeets() {
@@ -108,9 +111,7 @@ public class User implements Comparable<User> {
      * Set user status to infected and notify contacts.
      */
     public void declareInfected() {
-        status = UserStatus.INFECTED;
-        notifyObservers();
-        updateRiskyStatus();
+        setStatus(UserStatus.INFECTED);
     }
 
     @Override
