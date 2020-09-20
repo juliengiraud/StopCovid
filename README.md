@@ -99,7 +99,11 @@ Le singleton quant à lui permet de limiter les instances du DAO au nombre de un
 
 L'avantage de cette méthode est qu'il est possible de changer de technologie de base de données sans modifier une ligne de code dans le contrôleur.
 
-> Ça tombe plutôt bien car pour des raisons budgétaires nous avons dû nous résoudre à abandonner la base de données super sécurisée au profit d'un fichier CSV.
+> Ça tombe plutôt bien car pour des raisons budgétaires nous avons dû nous résoudre à abandonner la base de données super sécurisée au profit d'un fichier CSV.  
+
+<!-- Espace pour la version PDF
+![blank](rapport/blank.gif)
+-->
 
 ### Strategy
 
@@ -135,17 +139,35 @@ Controller controller = new ControllerBuilder()
 
 En réalité ce pattern n'est pas du tout essentiel au bon fonctionnement du projet, mais c'est une solution élégante et pratique pour ajouter les utilisateurs au _contrôleur_. Nous en avons également profité pour utiliser la méthode de sauvegarde de notre DAO. En effet, les utilisateurs rajoutés par le builder sont automatiquement sauvegardés dans le fichier CSV à condition d'en informer le builder avec un `.build(true)`.
 
+<!-- Espaces pour la version PDF
+![blank](rapport/blank.gif)
+
+![blank](rapport/blank.gif)
+
+![blank](rapport/blank.gif)
+
+![blank](rapport/blank.gif)
+
+![blank](rapport/blank.gif)
+
+![blank](rapport/blank.gif)
+
+![blank](rapport/blank.gif)
+-->
+
 ## Tests
 
-Pour la bonne conception de ce projet, nous avons mis en place des séries de tests par _packages_. Une classe de tests correspont donc à tous les tests effectués sur la classe correspondante.
+Pour la bonne conception de ce projet, nous avons mis en place des séries de test par *package*. Une classe de test correspond donc à tous les tests effectués sur la classe correspondante.
 
 ![Packages tests](rapport/tests.png)
 
-Nous avons donc effectué des tests pour chaque fonctionnalité, permettant de vérifier que tout fonctionnait comme nous le voulions. Cela nous a parfois permis de trouver des erreurs dans notre code. Il y a à ce jour 26 tests qui permettent de tester chaque fonctionnalités du _contrôleur_ et des _modèles_.
+Nous avons donc effectué des tests pour chaque fonctionnalité, afin d'en vérifier le bon fonctionnement. Cela nous a parfois permis de trouver des erreurs dans notre code.  
+Il y a à ce jour 26 tests qui permettent de tester l'ensemble des fonctionnalités du _contrôleur_ et des _modèles_.
 
 Ces séries ne sont évidemment pas complètes, car il y aura toujours des tests à ajouter. En commençant par les tests de la _vue_ mais aussi en testant toutes les possibilités entre les _packages_. Nous avons bien entendu tout de même opéré à un certain nombre de tests manuels pour la _vue_.
 
-Les tests impliquent aussi le checkstyle utilisé. Celui-ci nous a permis de garder un code très propre **tout le long du développement**. Personnellement, c'était la première fois que nous l'utilisions. Ce projet nous a convaincu de son utilité et de sa praticité. C'est par ailleur grâce à cela que pouvons aujourd'hui facilement créer une javadoc.
+Les tests impliquent aussi le checkstyle utilisé. Celui-ci nous a permis de garder un code très propre **tout le long du développement**. C'était la première fois que nous l'utilisions.  
+Ce projet nous a convaincu de son utilité et de sa praticité. C'est par ailleur grâce à cela que pouvons aujourd'hui facilement générer une javadoc.
 
 ## Éthique
 
@@ -153,18 +175,18 @@ Les tests impliquent aussi le checkstyle utilisé. Celui-ci nous a permis de gar
 
 Ce projet pose un certains nombre de questions éthiques. En effet, les utilisateurs ont le droit de garder privé le fait d'être infecté par le virus, ainsi que leur identité bien-sûr.
 
-Notre version mériterais certaines améliorations de ce point de vue. En effet, la vue utilisateur affiche les noms de chaque contact. Pour respecter les droits de chacun, seul les identifiants pourraient être affichés. Cependant, nous avons fait en sorte qu'il n'y ait aucun moyen de savoir qui est infecté dans les contacts d'un utilisateur.
+Notre version mériterait certaines améliorations de ce point de vue. En effet, la vue utilisateur affiche les noms de chaque contact. Pour respecter les droits de chacun, seul les identifiants devraient être affichés. Cependant, nous avons fait en sorte qu'il n'y ait aucun moyen de savoir qui est infecté dans les contacts d'un utilisateur.
 
 Pour garder les informations personnels des utilisateurs en sécurité, la base de donnée de l'application doit être bien sécurisée afin de prévenir les potentielles attaques qui dévoileraient des données confidentielles.
 
-Autant vous dire qu'avec un fichier CSV, c'est loin d'être optimal. Les données pourraient être stockées dans une base de donnée sécurisée. Cela augmenterais par ailleurs la rapidité de l'accès aux données. Nous avons tout de même mis en place le pattern DAO comme expliqué plus tôt. Grâce à cela, il est facile de changer de système de stockage des données dans le code.
+Autant vous dire qu'avec un fichier CSV, c'est loin d'être optimal. Les données devraient être stockées dans une vraie base de donnée avec des protocoles de sécurité. Cela augmenterais par ailleurs la rapidité de l'accès aux données. Nous avons tout de même mis en place le pattern DAO comme expliqué plus tôt. Grâce à cela, il est facile de changer de système de stockage des données dans le code.
 
-Même si les données restaient confidentiels à la vue du public, nos employés gérant le serveur ont accès à toutes ces données. Une amélioration possible serait d'avoir simplement accès à la liste des utilisateurs par identifiant, mais pas leur contacts ni leur nom. Il est possible de réaliser cela en ajoutant une couche contrôleur supplémentaire entre le serveur et les utilisateurs.
+Même si les données restaient confidentiels à la vue du public, les employés gérant le serveur (ou les hackers du futur) ont accès à toutes ces données. Une amélioration possible serait de simplement stocker la liste des utilisateurs en ligne, et que chaque utilisateur possède sa liste de contacts enregistrée localement par identifiant (sans leur nom). Il est possible de réaliser cette architecture en ajoutant une couche contrôleur supplémentaire entre le serveur et les utilisateurs.
 
 ### Les futures questions
 
-Notre application n'est pas complète, pour l'instant il s'agit en effet d'un simulateur qui n'utilise pas de véritables données pour créer la liste des contacts d'un utilisateur. Elle est pourtant prévue pour, à terme, être utilisé dans des conditions réelles et créer la liste de contacts en fonction des déplacements des utilisateurs. Cela créer de nouvelles questions en terme d'éthique et de données confidentielles.
+Notre application n'est pas complète, pour l'instant il s'agit d'un simulateur qui n'utilise pas de véritables données pour créer la liste des contacts d'un utilisateur. Pourtant, à terme elle est prévue pour être utilisée dans des conditions réelles et créer la liste de contacts en fonction des déplacements des utilisateurs. La question des données personnelles est en jeu.
 
-La position des utilisateurs ne devrait pas être utilisée, car il ne serait probablement pas efficace de vérifier la position de chaque utilisateur à tout moment. Mais cela engendrerait le fait de devoir sécurisée une donnée très sensible. Le protocole **Robert**, utilisé par la véritable application StopCovid _(oups)_, utilise le protocole bluetooth. Cela règle les questions concernant la position géographique mais n'empêche pas les utilisateurs de lié un appareil proche à un utilisateur. A voir si un autre protocole devrait être utilisé ?
+La position des utilisateurs ne devrait pas être utilisée, car il ne serait probablement pas efficace de vérifier la position de chaque utilisateur à tout moment. Cependant si c'était le cas, il faudrait sécuriser une masse de données très sensibles. Le protocole **Robert**, utilisé par la véritable application StopCovid *(oups)*, utilise le protocole bluetooth. Cela règle les questions concernant la position géographique mais n'empêche pas les utilisateurs de connecter leurs appareil entre eux. À voir si un autre protocole devrait être utilisé.
 
-Il est, d'après nous, nécéssaire que l'application prévienne que tout le monde n'utilise pas forcément l'application. Afin de faire comprendre à l'utilisateur que même si l'application ne signal aucun contact infecté, il est possible qu'il ait été en contact avec une personne infectée qui ne possède pas l'application.
+D'après nous, il est nécéssaire que l'application se base également sur d'autres données que celles de ces utilisateurs. En effet, même si l'application ne signal aucun contact infecté, il est possible qu'un utilisateur ait été en contact avec une personne infectée qui ne possède pas l'application.
