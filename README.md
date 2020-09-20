@@ -40,7 +40,7 @@ Malheureusement nous n'avons pas réussi à générer un `.jar` qui s'exécute s
 
 Donner une motivation des choix d’architecture (et des patterns choisis) en s’aidant de **diagrammes simples** adaptés au degré de précision et au type d’explication. Donc des **diagrammes de classe, mais pas que** cela, et pas de plats de spaghettis générés automatiquement représentant tout le code.
 
-Dans le cadre de ce projet nous avons mise en place pas moins de 6 design paterns qui ont chacun un role **primordiale** dans le bon fonctionnement de notre application.
+Dans le cadre de ce projet nous avons mise en place pas moins de 6 design paterns qui ont chacun un rôle **primordial** dans le bon fonctionnement de notre application.
 
 ### Model View Controller (MVC)
 
@@ -48,14 +48,14 @@ Toute l'**architecture** de notre application est basée sur un MVC afin de bien
 
 Notre MVC fonctionne de la façon suivante :
 
-- Le contrôleur à **accès** au model et la vue a accès au contrôleur.
-- La vue **demande** au contrôleur les informations à **afficher**, le contrôleur les récupèrent dans le modèle.
-- Lorsqu'une **action** se produit sur la vue (une rencontre par exemple), celle-ci **informe** le contrôleur qui mettra à jour modèle.
-- *Il y a également un système de notification pour les mises à jour de la vue, nous en parlons après.*
+- Le _contrôleur_ a **accès** au _modèle_ et la _vue_ a accès au _contrôleur_.
+- La _vue_ **demande** au _contrôleur_ les informations à **afficher**, le _contrôleur_ les récupèrent dans le _modèle_.
+- Lorsqu'une **action** se produit sur la _vue_ (une rencontre par exemple), celle-ci **informe** le _contrôleur_ qui mettra à jour le _modèle_.
+- *Il y a également un système de notification pour les mises à jour de la vue, il est détaillé à la suite de ce rapport.*
 
-![Schéma UML à mettre](rapport/mvc.png)
+![Diagramme de classe mvc](rapport/mvc.png)
 
-Ainsi les vues sont complètement indépendantes du modèle.
+Ainsi les vues sont complètement indépendantes du modèle, mais sont quand même dépendantes.
 
 ```java
 new MainView(stage, WIDTH, HEIGHT, controller);
@@ -71,14 +71,14 @@ Conclusion, notre super MVC fonctionne !
 
 Une fois l'architecture MVC en place nous avions absolument besoin d'un pattern observer afin de gérer la mise à jour des composants graphiques.
 
-![Schéma UML à mettre](rapport/observer.png)
+![Diagramme de classe observer](rapport/observer.png)
 
 Cette solution est vraiment indispensable car notre ancien système de mise à jour des vues était très mauvais en deux points.
 
 - Il y avait des spaghettis d'appels de fonctions avec des noms différents.
 - Le mécanisme utilisé se résumait à stocker des références de partout et parcourir toutes les vues afin de leur demander à toutes de se mettre à jour.
 
-L'implémentation du pattern observer a permis de clarifier ces fonctions de mise à jour et de gagner en perfornance car nous ne mettons à jour que les composants graphiques qui ont besoin de l'être.
+L'implémentation du pattern observer a permis de clarifier ces fonctions de mise à jour et de gagner en performance car nous ne mettons à jour que les composants graphiques qui ont besoin de l'être.
 
 #### *L'anecdote de ce pattern*
 
@@ -103,7 +103,7 @@ L'avantage de cette méthode est qu'il est possible de changer de technologie de
 
 ### Strategy
 
-Notre classe modèle a besoin de mettre en oeuvre différents algorithmes afin de choisir quels utilisateurs sont risqués. Afin d'abstraire l'implémentation de ces algorithmes du point de vue de la classe User nous avons utilisé le pattern stratégie.
+Notre classe modèle a besoin de mettre en oeuvre différents algorithmes afin de choisir quels utilisateurs sont risqués. Afin d'abstraire l'implémentation de ces algorithmes du point de vue de la classe User nous avons utilisé le pattern Strategy.
 
 ![Schéma UML à mettre](rapport/strategy.png)
 
@@ -113,7 +113,7 @@ Ce pattern nous permet d'avoir autant d'implémentations que l'on veut pour l'al
 List<User> riskyUsers = riskStrategy.getRiskyContacts(this);
 ```
 
-Concrètement la classe User se contente d'appeler la méthode `getRiskyContacts` sur un objet de type `RiskStrategy` (voir ci-dessus). Cet objet correspond sistématiquement à une stratégie spécifique, sélectionnée par le serveur.
+Concrètement la classe User se contente d'appeler la méthode `getRiskyContacts` sur un objet de type `RiskStrategy` (voir ci-dessus). Cet objet correspond systématiquement à une stratégie spécifique, sélectionnée par le serveur.
 
 Ce pattern est redoutablement efficace pour abstraire différentes versions d'une même méthode, pour autant son implémentation se résume à une utilisation basique des interfaces Java.
 
@@ -133,22 +133,38 @@ Controller controller = new ControllerBuilder()
         .build();
 ```
 
-En réalité ce pattern n'est pas du tout essentiel au bon fonctionnement du projet, mais c'est une solution élégante et pratique pour ajouter les utilisateurs au contrôleur. Nous en avons également profité pour pour utiliser la méthode de sauvegarde de notre DAO. En effet, les utilisateurs rajoutés par le builder sont automatiquement sauvegardés dans le fichier CSV à condition d'en informer le builder avec un `.build(true)`.
+En réalité ce pattern n'est pas du tout essentiel au bon fonctionnement du projet, mais c'est une solution élégante et pratique pour ajouter les utilisateurs au _contrôleur_. Nous en avons également profité pour utiliser la méthode de sauvegarde de notre DAO. En effet, les utilisateurs rajoutés par le builder sont automatiquement sauvegardés dans le fichier CSV à condition d'en informer le builder avec un `.build(true)`.
 
 ## Tests
 
-Ici j'ai envie qu'on parle du casse-tête que c'est d'immaginer toutes les combinaisons d'action d'une application
+Pour la bonne conception de ce projet, nous avons mis en place des séries de tests par _packages_. Une classe de tests correspont donc à tous les tests effectués sur la classe correspondante.
 
-J'ai aussi envie qu'on parle de la propreté du code, surtout avec le test du checkstyle parce que sérieux, faut avouer que même si ça nous fait chier ça force à coder propre, à bien commenter et ça au long terme c'est vachement pratique
+![Packages tests](rapport/tests.png)
 
-Faut aussi expliquer (sans trop être négatif) qu'on est loin d'avoir testé toutes les lignes de code et tous les cas d'utilisation, dans un monde idéal rien que pour le modèle à chaque cas d'utilisation spécifique avec A et B action en entrée il faudrait vérifier le résultat de (A.B), (A.-B), (-A.B), (-A.-B). Nous on a plutôt tendance à en vérifier un ou deux sur les 4 pour chaque cas...
+Nous avons donc effectué des tests pour chaque fonctionnalité, permettant de vérifier que tout fonctionnait comme nous le voulions. Cela nous a parfois permis de trouver des erreurs dans notre code. Il y a à ce jour 26 tests qui permettent de tester chaque fonctionnalités du _contrôleur_ et des _modèles_.
 
-## Étique
+Ces séries ne sont évidemment pas complètes, car il y aura toujours des tests à ajouter. En commençant par les tests de la _vue_ mais aussi en testant toutes les possibilités entre les _packages_. Nous avons bien entendu tout de même opéré à un certain nombre de tests manuels pour la _vue_.
 
-Là faut parler du fait que les utilisateurs savent qui ils ont rencontré, c'est quand même pas ouf, faudrait au minimum remplacer les noms par les ID des users
+Les tests impliquent aussi le checkstyle utilisé. Celui-ci nous a permis de garder un code très propre **tout le long du développement**. Personnellement, c'était la première fois que nous l'utilisions. Ce projet nous a convaincu de son utilité et de sa praticité. C'est par ailleur grâce à cela que pouvons aujourd'hui facilement créer une javadoc.
 
-Bon ensuite j'aimerai une petite blague de genre 3 lignes sur la sécurité de notre base de données claquée au sol
+## Éthique
 
-Ensuite ya le côté serveur qui connait la totalité des données, en vraie c'est dommage parce que vu que c'est l'utilisateur qui informe sa liste de contacte on pourrait immaginer une application où le serveur connais juste la liste des utilisateurs sans connaître leurs contacts -> dans ce cas là il faudrait rajouter une couche de séparation : vue utilisateur, BACK UTILISATEUR, vue serveur, back serveur
+### Possibles améliorations
 
-Il faudrait dire qu'une bonne idée d'évolution serait de remplacer la liste de contacts par une liste de rencontre avec "rencontre" défini comme un lieu et une date, comme ça tu sais pas qui tu as rencontré et tu peux les supprimer après 3 semaines automatiquement par exemple (si pas de contamination), ça serait d'autant mieux si avec ça on ajoute l'idée que le serveur ne connais pas les rencontres et qu'elles sont enregistrées dans les données des appli utilisateurs
+Ce projet pose un certains nombre de questions éthiques. En effet, les utilisateurs ont le droit de garder privé le fait d'être infecté par le virus, ainsi que leur identité bien-sûr.
+
+Notre version mériterais certaines améliorations de ce point de vue. En effet, la vue utilisateur affiche les noms de chaque contact. Pour respecter les droits de chacun, seul les identifiants pourraient être affichés. Cependant, nous avons fait en sorte qu'il n'y ait aucun moyen de savoir qui est infecté dans les contacts d'un utilisateur.
+
+Pour garder les informations personnels des utilisateurs en sécurité, la base de donnée de l'application doit être bien sécurisée afin de prévenir les potentielles attaques qui dévoileraient des données confidentielles.
+
+Autant vous dire qu'avec un fichier CSV, c'est loin d'être optimal. Les données pourraient être stockées dans une base de donnée sécurisée. Cela augmenterais par ailleurs la rapidité de l'accès aux données. Nous avons tout de même mis en place le pattern DAO comme expliqué plus tôt. Grâce à cela, il est facile de changer de système de stockage des données dans le code.
+
+Même si les données restaient confidentiels à la vue du public, nos employés gérant le serveur ont accès à toutes ces données. Une amélioration possible serait d'avoir simplement accès à la liste des utilisateurs par identifiant, mais pas leur contacts ni leur nom. Il est possible de réaliser cela en ajoutant une couche contrôleur supplémentaire entre le serveur et les utilisateurs.
+
+### Les futures questions
+
+Notre application n'est pas complète, pour l'instant il s'agit en effet d'un simulateur qui n'utilise pas de véritables données pour créer la liste des contacts d'un utilisateur. Elle est pourtant prévue pour, à terme, être utilisé dans des conditions réelles et créer la liste de contacts en fonction des déplacements des utilisateurs. Cela créer de nouvelles questions en terme d'éthique et de données confidentielles.
+
+La position des utilisateurs ne devrait pas être utilisée, car il ne serait probablement pas efficace de vérifier la position de chaque utilisateur à tout moment. Mais cela engendrerait le fait de devoir sécurisée une donnée très sensible. Le protocole **Robert**, utilisé par la véritable application StopCovid _(oups)_, utilise le protocole bluetooth. Cela règle les questions concernant la position géographique mais n'empêche pas les utilisateurs de lié un appareil proche à un utilisateur. A voir si un autre protocole devrait être utilisé ?
+
+Il est, d'après nous, nécéssaire que l'application prévienne que tout le monde n'utilise pas forcément l'application. Afin de faire comprendre à l'utilisateur que même si l'application ne signal aucun contact infecté, il est possible qu'il ait été en contact avec une personne infectée qui ne possède pas l'application.
